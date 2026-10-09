@@ -65,11 +65,11 @@ interface Foto {
       <ion-range label="Ancho (px)" labelPlacement="start" [min]="160" [max]="1280" [step]="80" [pin]="true" [(ngModel)]="anchoMax"></ion-range>
     </div>
     <div class="row">
-      <ion-button size="small" (click)="abrir()" [disabled]="activa"><ion-icon slot="start" name="camera"></ion-icon>Abrir cámara</ion-button>
-      <ion-button size="small" color="success" (click)="capturar()" [disabled]="!activa"><ion-icon slot="start" name="radio-button-on"></ion-icon>Capturar</ion-button>
+      <ion-button size="small" (click)="abrir()" [disabled]="activa"><ion-icon aria-hidden="true" slot="start" name="camera"></ion-icon>Abrir cámara</ion-button>
+      <ion-button size="small" color="success" (click)="capturar()" [disabled]="!activa"><ion-icon aria-hidden="true" slot="start" name="radio-button-on"></ion-icon>Capturar</ion-button>
       <ion-button size="small" color="medium" (click)="cerrar()" [disabled]="!activa">Cerrar</ion-button>
       @if (nativa) {
-        <ion-button size="small" color="tertiary" (click)="fotoNativa()"><ion-icon slot="start" name="camera"></ion-icon>Foto nativa (Capacitor)</ion-button>
+        <ion-button size="small" color="tertiary" (click)="fotoNativa()"><ion-icon aria-hidden="true" slot="start" name="camera"></ion-icon>Foto nativa (Capacitor)</ion-button>
       }
     </div>
     @if (error) { <ion-card color="danger"><ion-card-content>{{ error }}</ion-card-content></ion-card> }
@@ -82,7 +82,7 @@ interface Foto {
         <figure><img [src]="f.url" alt="Foto capturada" /><figcaption>{{ f.ancho }}×{{ f.alto }} · q{{ f.calidad }} · <strong>{{ f.kb | number: '1.0-0' }} KB</strong></figcaption></figure>
       } @empty { <p class="hint">Aún no hay fotos. Compara el tamaño con distintas calidades y anchos.</p> }
     </div>
-    <pre class="code"><code>// Equivalente con Capacitor (app nativa)
+    <pre tabindex="0" class="code"><code>// Equivalente con Capacitor (app nativa)
 const foto = await Camera.takePhoto({{ '{' }}
   quality: {{ calidad }},
   targetWidth: {{ anchoMax }},
@@ -215,9 +215,9 @@ interface Lectura {
       <ion-range label="Descartar si accuracy > (m)" labelPlacement="stacked" [min]="5" [max]="500" [step]="5" [pin]="true" [(ngModel)]="umbral"></ion-range>
     </div>
     <div class="row">
-      <ion-button size="small" (click)="una()"><ion-icon slot="start" name="location"></ion-icon>getCurrentPosition</ion-button>
-      <ion-button size="small" [color]="siguiendo ? 'danger' : 'tertiary'" (click)="seguir()"><ion-icon slot="start" [name]="siguiendo ? 'stop' : 'refresh'"></ion-icon>{{ siguiendo ? 'clearWatch' : 'watchPosition' }}</ion-button>
-      <ion-button size="small" fill="outline" (click)="simular()"><ion-icon slot="start" name="flask"></ion-icon>Simular lectura</ion-button>
+      <ion-button size="small" (click)="una()"><ion-icon aria-hidden="true" slot="start" name="location"></ion-icon>getCurrentPosition</ion-button>
+      <ion-button size="small" [color]="siguiendo ? 'danger' : 'tertiary'" (click)="seguir()"><ion-icon aria-hidden="true" slot="start" [name]="siguiendo ? 'stop' : 'refresh'"></ion-icon>{{ siguiendo ? 'clearWatch' : 'watchPosition' }}</ion-button>
+      <ion-button size="small" fill="outline" (click)="simular()"><ion-icon aria-hidden="true" slot="start" name="flask"></ion-icon>Simular lectura</ion-button>
     </div>
     @if (error) { <ion-card color="danger"><ion-card-content>{{ error }}</ion-card-content></ion-card> }
     @if (ultima) {
@@ -241,7 +241,7 @@ interface Lectura {
     } @else {
       <p>Distancia entre <strong>Madrid</strong> y <strong>{{ destino }}</strong>: <strong>{{ distanciaMadrid | number: '1.1-1' }} km</strong> (toma una lectura para usar tu posición).</p>
     }
-    <pre class="code"><code>R = 6371 km
+    <pre tabindex="0" class="code"><code>R = 6371 km
 a = sin²(Δlat/2) + cos(lat1)·cos(lat2)·sin²(Δlon/2)
 d = 2·R·asin(√a)</code></pre>
   `,
@@ -408,7 +408,7 @@ export class DemoGpsComponent implements OnDestroy {
       <ion-range label="Filtro α (0.05 = suave)" labelPlacement="stacked" [min]="0.05" [max]="1" [step]="0.05" [pin]="true" [(ngModel)]="alfa"></ion-range>
     </div>
     <div class="row">
-      <ion-button size="small" fill="outline" (click)="agitar()"><ion-icon slot="start" name="flash"></ion-icon>Agitar</ion-button>
+      <ion-button size="small" fill="outline" (click)="agitar()"><ion-icon aria-hidden="true" slot="start" name="flash"></ion-icon>Agitar</ion-button>
       <ion-button size="small" fill="outline" (click)="reales()">{{ real ? 'Dejar sensores reales' : 'Usar sensores reales' }}</ion-button>
     </div>
     <div class="arena"><div class="ball" [style.left.%]="50 + gx * 0.8" [style.top.%]="50 + gy * 0.8"></div></div>
@@ -416,7 +416,7 @@ export class DemoGpsComponent implements OnDestroy {
       <span>x = {{ ax | number: '1.2-2' }}</span><span>y = {{ ay | number: '1.2-2' }}</span><span>z = {{ az | number: '1.2-2' }}</span>
       <strong>|a| = {{ mag | number: '1.2-2' }} m/s²</strong>
     </div>
-    @if (agitado) { <ion-card color="warning"><ion-card-content><ion-icon name="notifications"></ion-icon> ¡Agitación detectada! (|a| > 20 m/s²)</ion-card-content></ion-card> }
+    @if (agitado) { <ion-card color="warning"><ion-card-content><ion-icon aria-hidden="true" name="notifications"></ion-icon> ¡Agitación detectada! (|a| > 20 m/s²)</ion-card-content></ion-card> }
     <svg viewBox="0 0 200 60" class="spark">
       <polyline [attr.points]="rawPts" fill="none" stroke="#eb445a" stroke-width="1" />
       <polyline [attr.points]="filtPts" fill="none" stroke="#2dd36f" stroke-width="2" />
@@ -560,12 +560,12 @@ export class DemoSensorsComponent implements OnInit, OnDestroy {
         </ion-item>
       }
     </ion-list>
-    <ion-button size="small" fill="clear" (click)="consultar()"><ion-icon slot="start" name="refresh"></ion-icon>Volver a consultar</ion-button>
+    <ion-button size="small" fill="clear" (click)="consultar()"><ion-icon aria-hidden="true" slot="start" name="refresh"></ion-icon>Volver a consultar</ion-button>
     @if (msg) { <p class="hint">{{ msg }}</p> }
 
     <h3>Buena práctica: «prepermiso» en contexto</h3>
     <p class="hint">Antes del diálogo del sistema (que solo se puede mostrar una vez), explica el motivo con tu propio diálogo.</p>
-    <ion-button (click)="conPrepermiso()"><ion-icon slot="start" name="location"></ion-icon>Mostrar sucursales cercanas</ion-button>
+    <ion-button (click)="conPrepermiso()"><ion-icon aria-hidden="true" slot="start" name="location"></ion-icon>Mostrar sucursales cercanas</ion-button>
 
     <h3>Flujo recomendado</h3>
     <ol class="flow">
@@ -673,10 +673,10 @@ export class DemoPermissionsComponent implements OnInit {
         <ion-select-option value="carrito">Carrito de compras</ion-select-option>
         <ion-select-option value="password">Validador de contraseñas</ion-select-option>
       </ion-select>
-      <ion-toggle [(ngModel)]="bug" (ngModelChange)="limpiar()"><ion-icon name="bug"></ion-icon> Introducir un bug en el código</ion-toggle>
+      <ion-toggle [(ngModel)]="bug" (ngModelChange)="limpiar()"><ion-icon aria-hidden="true" name="bug"></ion-icon> Introducir un bug en el código</ion-toggle>
     </div>
     <div class="row">
-      <ion-button size="small" (click)="ejecutar()"><ion-icon slot="start" name="play"></ion-icon>Ejecutar pruebas</ion-button>
+      <ion-button size="small" (click)="ejecutar()"><ion-icon aria-hidden="true" slot="start" name="play"></ion-icon>Ejecutar pruebas</ion-button>
     </div>
     @if (resultados.length) {
       <ion-card [color]="fallos === 0 ? 'success' : 'danger'">
@@ -685,7 +685,7 @@ export class DemoPermissionsComponent implements OnInit {
       <ion-list lines="full">
         @for (r of resultados; track r.name) {
           <ion-item>
-            <span slot="start"><ion-icon [name]="r.ok ? 'checkmark-circle' : 'close-circle'" [color]="r.ok ? 'success' : 'danger'"></ion-icon></span>
+            <span slot="start"><ion-icon aria-hidden="true" [name]="r.ok ? 'checkmark-circle' : 'close-circle'" [color]="r.ok ? 'success' : 'danger'"></ion-icon></span>
             <ion-label class="ion-text-wrap"><h3>{{ r.name }}</h3>@if (!r.ok) { <p class="err">{{ r.error }}</p> }</ion-label>
             <ion-note slot="end">{{ r.ms | number: '1.0-1' }} ms</ion-note>
           </ion-item>
@@ -693,7 +693,7 @@ export class DemoPermissionsComponent implements OnInit {
       </ion-list>
     }
     <h3>Código bajo prueba</h3>
-    <pre class="code"><code>{{ codigo }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ codigo }}</code></pre>
   `,
   styles: [...SHARED_STYLES, '.err{color:var(--ion-color-danger);font-family:ui-monospace,Consolas,monospace;font-size:.75rem}'],
 })
@@ -832,7 +832,7 @@ function magnitud(x, y, z) { return Math.sqrt(x*x + y*y ${b ? '+ 0' : '+ z*z'});
     <ion-range label="Probabilidad de fallo (%)" labelPlacement="stacked" [min]="0" [max]="100" [step]="10" [pin]="true" [(ngModel)]="pFallo"></ion-range>
     <ion-range label="Reintentos máx." labelPlacement="stacked" [min]="0" [max]="5" [snaps]="true" [pin]="true" [(ngModel)]="maxRetry"></ion-range>
     <ion-button size="small" (click)="reintentos()">Lanzar petición</ion-button>
-    <pre class="code"><code>{{ logRetry.join('\\n') || '(sin ejecuciones)' }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ logRetry.join('\\n') || '(sin ejecuciones)' }}</code></pre>
 
     <h3>4 · Buscador: con y sin debounce</h3>
     <ion-input label="Escribe rápido" labelPlacement="floating" fill="outline" (ionInput)="tecla($any($event).target.value)"></ion-input>
@@ -953,7 +953,7 @@ interface ErrCampo { campo: string; msg: string }
   ],
   template: `
     <h3>Prueba de contrato: ¿la respuesta cumple el esquema?</h3>
-    <pre class="code"><code>Persona = {{ '{' }} id: number, nombre: string (no vacío), ciudad: string, rol: string {{ '}' }}</code></pre>
+    <pre tabindex="0" class="code"><code>Persona = {{ '{' }} id: number, nombre: string (no vacío), ciudad: string, rol: string {{ '}' }}</code></pre>
     <div class="row">
       <ion-button size="small" fill="outline" (click)="cargar('ok')">Respuesta válida</ion-button>
       <ion-button size="small" fill="outline" color="warning" (click)="cargar('tipos')">Tipos incorrectos</ion-button>
@@ -963,9 +963,9 @@ interface ErrCampo { campo: string; msg: string }
     <textarea class="editor" rows="9" spellcheck="false" [(ngModel)]="json"></textarea>
     <ion-card [color]="resultado.valido ? 'success' : 'danger'">
       <ion-card-content>
-        @if (resultado.valido) { <ion-icon name="checkmark-circle"></ion-icon> Contrato cumplido: {{ resultado.n }} elementos válidos. }
+        @if (resultado.valido) { <ion-icon aria-hidden="true" name="checkmark-circle"></ion-icon> Contrato cumplido: {{ resultado.n }} elementos válidos. }
         @else {
-          <ion-icon name="close-circle"></ion-icon> {{ resultado.errores.length }} incumplimiento(s):
+          <ion-icon aria-hidden="true" name="close-circle"></ion-icon> {{ resultado.errores.length }} incumplimiento(s):
           <ul>@for (e of resultado.errores; track $index) { <li><code>{{ e.campo }}</code>: {{ e.msg }}</li> }</ul>
         }
       </ion-card-content>
@@ -982,7 +982,7 @@ interface ErrCampo { campo: string; msg: string }
         <p><strong>¿Reintentar?</strong> {{ actual.retry }}</p>
       </ion-card-content>
     </ion-card>
-    <pre class="code"><code>this.http.get(url).subscribe({{ '{' }}
+    <pre tabindex="0" class="code"><code>this.http.get(url).subscribe({{ '{' }}
   error: (e: HttpErrorResponse) => {{ '{' }}
     switch (e.status) {{ '{' }}
       case 0:   return this.avisar('Sin conexión');

@@ -72,7 +72,7 @@
         Mi botón
       </ion-button>
     </div>
-    <pre class="code"><code>{{ btnCode }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ btnCode }}</code></pre>
   }
 
   <!-- ───────────── 3. LISTAS ───────────── -->
@@ -147,7 +147,7 @@
     </ion-button>
 
     <h4>Modelo en vivo</h4>
-    <pre class="code"><code>{{ formJson }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ formJson }}</code></pre>
   }
 
   <!-- ───────────── 5. OVERLAYS ───────────── -->
@@ -164,7 +164,7 @@
     </div>
 
     <h4>Registro de eventos</h4>
-    <pre class="code"><code>{{ log.length ? log.join('\n') : '(vacío — abre algún overlay)' }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ log.length ? log.join('\n') : '(vacío — abre algún overlay)' }}</code></pre>
 
     <ion-modal [isOpen]="modalOpen" (didDismiss)="modalOpen = false">
       <ng-template>
@@ -207,7 +207,7 @@
         <ion-col [size]="colB"><div class="box b">B · {{ colB }}</div></ion-col>
       </ion-row>
     </ion-grid>
-    <pre class="code"><code>&lt;ion-col size="{{ colA }}"&gt;A&lt;/ion-col&gt;
+    <pre tabindex="0" class="code"><code>&lt;ion-col size="{{ colA }}"&gt;A&lt;/ion-col&gt;
 &lt;ion-col size="{{ colB }}"&gt;B&lt;/ion-col&gt;</code></pre>
 
     <h3>Alineación con utilidades</h3>
@@ -233,7 +233,7 @@
         <ion-col size="3"><div class="box b">2</div></ion-col>
       </ion-row>
     </ion-grid>
-    <pre class="code"><code>&lt;ion-row class="ion-justify-content-{{ justify }} ion-align-items-{{ align }}"&gt;</code></pre>
+    <pre tabindex="0" class="code"><code>&lt;ion-row class="ion-justify-content-{{ justify }} ion-align-items-{{ align }}"&gt;</code></pre>
 
     <h3>Responsive: ancho actual {{ width }}px (breakpoint {{ breakpoint }})</h3>
     <ion-grid class="demo-grid">
@@ -243,7 +243,7 @@
         }
       </ion-row>
     </ion-grid>
-    <pre class="code"><code>&lt;ion-col size="12" size-sm="6" size-lg="4"&gt;</code></pre>
+    <pre tabindex="0" class="code"><code>&lt;ion-col size="12" size-sm="6" size-lg="4"&gt;</code></pre>
   }
 
   <!-- ───────────── 7. NAVEGACIÓN ───────────── -->
@@ -263,7 +263,7 @@
       </ion-select>
     </div>
     <ion-button (click)="navigate()">Navegar</ion-button>
-    <pre class="code"><code>this.navCtrl.{{ navDir === 'forward' ? 'navigateForward' : navDir === 'back' ? 'navigateBack' : 'navigateRoot' }}(['/leccion', '{{ navTarget }}']);</code></pre>
+    <pre tabindex="0" class="code"><code>this.navCtrl.{{ navDir === 'forward' ? 'navigateForward' : navDir === 'back' ? 'navigateBack' : 'navigateRoot' }}(['/leccion', '{{ navTarget }}']);</code></pre>
     <p class="hint">
       Fíjate en la animación: <em>forward</em> desliza desde la derecha, <em>back</em> hacia la
       derecha y <em>root</em> reemplaza sin historial.
@@ -287,16 +287,16 @@
       <ion-button fill="outline" [style.--border-radius.px]="radius">Outline</ion-button>
       <ion-chip color="primary">Chip</ion-chip>
       <ion-toggle [checked]="true" color="primary">Toggle</ion-toggle>
-      <ion-progress-bar color="primary" [value]="0.6"></ion-progress-bar>
+      <ion-progress-bar aria-label="Progreso" color="primary" [value]="0.6"></ion-progress-bar>
       <ion-checkbox [checked]="true" color="primary">Checkbox</ion-checkbox>
     </div>
 
-    <pre class="code"><code>{{ themeCss }}
+    <pre tabindex="0" class="code"><code>{{ themeCss }}
 ion-button {{ '{' }} --border-radius: {{ radius }}px; {{ '}' }}</code></pre>
 
     <h3>Modo oscuro de toda la app</h3>
     <ion-button color="dark" (click)="school.toggleDark()">
-      <ion-icon slot="start" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon>{{ school.dark ? 'Cambiar a claro' : 'Cambiar a oscuro' }}
+      <ion-icon aria-hidden="true" slot="start" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon>{{ school.dark ? 'Cambiar a claro' : 'Cambiar a oscuro' }}
     </ion-button>
   }
 
@@ -315,7 +315,7 @@ ion-button {{ '{' }} --border-radius: {{ radius }}px; {{ '}' }}</code></pre>
       <ion-button size="small" (click)="haptic('light')">Impacto suave</ion-button>
       <ion-button size="small" (click)="haptic('medium')">Impacto medio</ion-button>
       <ion-button size="small" (click)="haptic('heavy')">Impacto fuerte</ion-button>
-      <ion-button size="small" color="success" (click)="haptic('success')"><ion-icon slot="start" name="checkmark"></ion-icon>Notificación</ion-button>
+      <ion-button size="small" color="success" (click)="haptic('success')"><ion-icon aria-hidden="true" slot="start" name="checkmark"></ion-icon>Notificación</ion-button>
       <ion-button size="small" color="tertiary" (click)="haptic('vibrate')">Vibrar</ion-button>
     </div>
     @if (nativeMsg) {

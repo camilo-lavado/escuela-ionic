@@ -3,7 +3,7 @@
     <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
     <ion-title>Playground</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon aria-hidden="true" slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -27,12 +27,13 @@
         <h3>Código</h3>
         <textarea
           class="editor"
+          aria-label="Código HTML del playground"
           spellcheck="false"
           [(ngModel)]="code"
           (ngModelChange)="onChange()"
         ></textarea>
         <div class="actions">
-          <ion-button size="small" (click)="run()"><ion-icon slot="start" name="play"></ion-icon>Ejecutar</ion-button>
+          <ion-button size="small" (click)="run()"><ion-icon aria-hidden="true" slot="start" name="play"></ion-icon>Ejecutar</ion-button>
           <ion-button size="small" fill="outline" (click)="copy()">Copiar</ion-button>
           <ion-input
             class="name"

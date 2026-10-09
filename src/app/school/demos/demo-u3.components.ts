@@ -66,9 +66,9 @@ interface Dispositivo {
       <ion-range label="Zoom" labelPlacement="start" [min]="0.3" [max]="1" [step]="0.05" [pin]="true" [(ngModel)]="zoom"></ion-range>
     </div>
     <div class="row">
-      <ion-button size="small" fill="outline" (click)="horizontal = !horizontal"><ion-icon slot="start" name="refresh"></ion-icon>{{ horizontal ? 'Vertical' : 'Horizontal' }}</ion-button>
-      <ion-button size="small" fill="outline" (click)="oscuro()"><ion-icon slot="start" name="moon"></ion-icon>Modo oscuro</ion-button>
-      <ion-button size="small" fill="outline" (click)="recargar()"><ion-icon slot="start" name="refresh"></ion-icon>Recargar</ion-button>
+      <ion-button size="small" fill="outline" (click)="horizontal = !horizontal"><ion-icon aria-hidden="true" slot="start" name="refresh"></ion-icon>{{ horizontal ? 'Vertical' : 'Horizontal' }}</ion-button>
+      <ion-button size="small" fill="outline" (click)="oscuro()"><ion-icon aria-hidden="true" slot="start" name="moon"></ion-icon>Modo oscuro</ion-button>
+      <ion-button size="small" fill="outline" (click)="recargar()"><ion-icon aria-hidden="true" slot="start" name="refresh"></ion-icon>Recargar</ion-button>
     </div>
     <div class="wrap" [style.width.px]="ancho * zoom + 24" [style.height.px]="alto * zoom + 24">
       <div class="frame" [style.width.px]="ancho" [style.height.px]="alto" [style.transform]="'scale(' + zoom + ')'">
@@ -78,13 +78,13 @@ interface Dispositivo {
     <p class="hint">Es una simulación de <strong>tamaño y orientación</strong> (como el modo dispositivo de DevTools). No reproduce el sistema operativo, el rendimiento ni el hardware: para eso están los emuladores de Android Studio y el Simulador de Xcode.</p>
 
     <h3>Matriz de pruebas: ¿qué has cubierto? ({{ cubierto }}/{{ matriz.length }})</h3>
-    <ion-progress-bar [value]="cubierto / matriz.length"></ion-progress-bar>
+    <ion-progress-bar aria-label="Progreso" [value]="cubierto / matriz.length"></ion-progress-bar>
     <div class="mat">
       @for (m of matriz; track m.t) { <ion-checkbox [(ngModel)]="m.ok" labelPlacement="end">{{ m.t }}</ion-checkbox> }
     </div>
 
     <h3>Referencia de comandos</h3>
-    <pre class="code"><code>emulator -list-avds                  # AVDs creados
+    <pre tabindex="0" class="code"><code>emulator -list-avds                  # AVDs creados
 emulator -avd Pixel_7_API_34         # arrancar
 adb devices                          # dispositivos visibles
 adb install -r app-debug.apk         # instalar APK
@@ -177,14 +177,14 @@ export class DemoEmulatorComponent {
       @for (e of experimentos; track e.n) { <ion-button size="small" fill="outline" (click)="ejecutar(e.id)">{{ e.n }}</ion-button> }
       <ion-button size="small" fill="clear" color="medium" (click)="lineas = []">Limpiar</ion-button>
     </div>
-    <pre class="code consola"><code>{{ lineas.length ? lineas.join('\\n') : '(ejecuta un experimento; también aparece en la consola real: F12)' }}</code></pre>
+    <pre tabindex="0" class="code consola"><code>{{ lineas.length ? lineas.join('\\n') : '(ejecuta un experimento; también aparece en la consola real: F12)' }}</code></pre>
 
     <h3>Encuentra el bug ({{ aciertos }}/{{ casos.length }})</h3>
     @for (c of casos; track c.t; let i = $index) {
       <ion-card>
         <ion-card-header><ion-card-subtitle>Caso {{ i + 1 }}</ion-card-subtitle><ion-card-title class="q">{{ c.t }}</ion-card-title></ion-card-header>
         <ion-card-content>
-          <pre class="code"><code>{{ c.codigo }}</code></pre>
+          <pre tabindex="0" class="code"><code>{{ c.codigo }}</code></pre>
           <p><strong>Síntoma:</strong> {{ c.sintoma }}</p>
           <ion-list lines="none">
             @for (o of c.opciones; track o; let j = $index) {
@@ -193,8 +193,8 @@ export class DemoEmulatorComponent {
               </ion-item>
             }
           </ion-list>
-          @if (c.resp === c.ok) { <p class="hint"><ion-icon color="success" name="checkmark-circle"></ion-icon> {{ c.exp }}<br /><strong>Herramienta:</strong> {{ c.herr }}</p> }
-          @else if (c.resp >= 0) { <p class="hint"><ion-icon color="danger" name="close-circle"></ion-icon> Inténtalo de nuevo. Piensa en qué se ejecuta primero y qué ve cada entorno.</p> }
+          @if (c.resp === c.ok) { <p class="hint"><ion-icon aria-hidden="true" color="success" name="checkmark-circle"></ion-icon> {{ c.exp }}<br /><strong>Herramienta:</strong> {{ c.herr }}</p> }
+          @else if (c.resp >= 0) { <p class="hint"><ion-icon aria-hidden="true" color="danger" name="close-circle"></ion-icon> Inténtalo de nuevo. Piensa en qué se ejecuta primero y qué ve cada entorno.</p> }
         </ion-card-content>
       </ion-card>
     }
@@ -359,16 +359,16 @@ const fromB64u = (s: string) => {
       <ion-input label="Secreto del servidor" labelPlacement="floating" fill="outline" [(ngModel)]="secreto"></ion-input>
     </div>
     <div class="row">
-      <ion-button size="small" (click)="generar()"><ion-icon slot="start" name="key"></ion-icon>Generar token</ion-button>
-      <ion-button size="small" color="warning" (click)="manipular()" [disabled]="!token"><ion-icon slot="start" name="cut"></ion-icon>Cambiar el rol a admin sin firma</ion-button>
-      <ion-button size="small" color="medium" (click)="expirar()" [disabled]="!token"><ion-icon slot="start" name="alarm"></ion-icon>Token ya expirado</ion-button>
+      <ion-button size="small" (click)="generar()"><ion-icon aria-hidden="true" slot="start" name="key"></ion-icon>Generar token</ion-button>
+      <ion-button size="small" color="warning" (click)="manipular()" [disabled]="!token"><ion-icon aria-hidden="true" slot="start" name="cut"></ion-icon>Cambiar el rol a admin sin firma</ion-button>
+      <ion-button size="small" color="medium" (click)="expirar()" [disabled]="!token"><ion-icon aria-hidden="true" slot="start" name="alarm"></ion-icon>Token ya expirado</ion-button>
     </div>
     <textarea class="editor" rows="4" spellcheck="false" [(ngModel)]="token" (ngModelChange)="verificar()"></textarea>
     @if (partes.length === 3) {
       <p class="token"><span class="p1">{{ partes[0] }}</span>.<span class="p2">{{ partes[1] }}</span>.<span class="p3">{{ partes[2] }}</span></p>
       <div class="dos">
-        <div><h4>Cabecera</h4><pre class="code"><code>{{ cabecera }}</code></pre></div>
-        <div><h4>Carga (payload) — legible por cualquiera</h4><pre class="code"><code>{{ carga }}</code></pre></div>
+        <div><h4>Cabecera</h4><pre tabindex="0" class="code"><code>{{ cabecera }}</code></pre></div>
+        <div><h4>Carga (payload) — legible por cualquiera</h4><pre tabindex="0" class="code"><code>{{ carga }}</code></pre></div>
       </div>
     }
     @if (veredicto) { <ion-card [color]="veredictoOk ? 'success' : 'danger'"><ion-card-content>{{ veredicto }}</ion-card-content></ion-card> }
@@ -392,7 +392,7 @@ const fromB64u = (s: string) => {
 
     <h3>3 · Fortaleza de contraseña</h3>
     <ion-input label="Contraseña de prueba" labelPlacement="floating" fill="outline" type="text" [(ngModel)]="pass"></ion-input>
-    <ion-progress-bar [value]="fuerza.puntos / 100" [color]="fuerza.color"></ion-progress-bar>
+    <ion-progress-bar aria-label="Progreso" [value]="fuerza.puntos / 100" [color]="fuerza.color"></ion-progress-bar>
     <p>{{ fuerza.texto }} · ≈ {{ fuerza.bits | number: '1.0-0' }} bits de entropía estimada</p>
     <ul class="hint">@for (c of fuerza.consejos; track c) { <li>{{ c }}</li> }</ul>
   `,
@@ -542,7 +542,7 @@ export class DemoAuthComponent {
   template: `
     <h3>1 · Hash SHA-256 (una vía)</h3>
     <ion-input label="Texto" labelPlacement="floating" fill="outline" [(ngModel)]="texto" (ngModelChange)="calcularHash()"></ion-input>
-    <pre class="code"><code>{{ hash }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ hash }}</code></pre>
     <p class="hint">Cambia una sola letra: el hash cambia por completo (efecto avalancha). Sirve para comprobar integridad, no para ocultar datos. Las contraseñas se guardan con hashes lentos y con sal (Argon2id/bcrypt) en el servidor.</p>
 
     <h3>2 · Cifrado AES-GCM con clave derivada de una frase (PBKDF2)</h3>
@@ -550,17 +550,17 @@ export class DemoAuthComponent {
       <ion-input label="Mensaje secreto" labelPlacement="floating" fill="outline" [(ngModel)]="mensaje"></ion-input>
       <ion-input label="Frase secreta para cifrar" labelPlacement="floating" fill="outline" [(ngModel)]="frase"></ion-input>
     </div>
-    <ion-button size="small" (click)="cifrar()"><ion-icon slot="start" name="lock-closed"></ion-icon>Cifrar</ion-button>
+    <ion-button size="small" (click)="cifrar()"><ion-icon aria-hidden="true" slot="start" name="lock-closed"></ion-icon>Cifrar</ion-button>
     @if (paquete) {
-      <pre class="code"><code>sal (16 B): {{ paquete.sal }}
+      <pre tabindex="0" class="code"><code>sal (16 B): {{ paquete.sal }}
 IV  (12 B): {{ paquete.iv }}
 cifrado   : {{ paquete.datos }}</code></pre>
       <div class="controls">
         <ion-input label="Frase para descifrar" labelPlacement="floating" fill="outline" [(ngModel)]="fraseDescifrar"></ion-input>
       </div>
       <div class="row">
-        <ion-button size="small" color="success" (click)="descifrar()"><ion-icon slot="start" name="lock-open"></ion-icon>Descifrar</ion-button>
-        <ion-button size="small" color="warning" (click)="alterar()"><ion-icon slot="start" name="flash"></ion-icon>Alterar 1 byte del cifrado</ion-button>
+        <ion-button size="small" color="success" (click)="descifrar()"><ion-icon aria-hidden="true" slot="start" name="lock-open"></ion-icon>Descifrar</ion-button>
+        <ion-button size="small" color="warning" (click)="alterar()"><ion-icon aria-hidden="true" slot="start" name="flash"></ion-icon>Alterar 1 byte del cifrado</ion-button>
       </div>
       @if (resultado) { <ion-card [color]="resultadoOk ? 'success' : 'danger'"><ion-card-content>{{ resultado }}</ion-card-content></ion-card> }
     }
@@ -697,7 +697,7 @@ interface Linea {
           <ion-item>
             <ion-label class="ion-text-wrap">
               <h3>Línea {{ l.n }} · {{ l.tipo }} <ion-chip [color]="l.sev === 'Alta' ? 'danger' : 'warning'">{{ l.sev }}</ion-chip></h3>
-              <p><ion-icon color="success" name="checkmark-circle"></ion-icon> Corrección: {{ l.fix }}</p>
+              <p><ion-icon aria-hidden="true" color="success" name="checkmark-circle"></ion-icon> Corrección: {{ l.fix }}</p>
             </ion-label>
           </ion-item>
         }
@@ -708,7 +708,7 @@ interface Linea {
     @for (c of categorias; track c.n) {
       <div class="cat">
         <strong>{{ c.n }}</strong> <small>{{ pct(c) | number: '1.0-0' }} %</small>
-        <ion-progress-bar [value]="pct(c) / 100" [color]="pct(c) >= 80 ? 'success' : pct(c) >= 50 ? 'warning' : 'danger'"></ion-progress-bar>
+        <ion-progress-bar aria-label="Progreso" [value]="pct(c) / 100" [color]="pct(c) >= 80 ? 'success' : pct(c) >= 50 ? 'warning' : 'danger'"></ion-progress-bar>
         @for (q of c.q; track q.t) { <ion-checkbox [(ngModel)]="q.ok" labelPlacement="end">{{ q.t }}</ion-checkbox> }
       </div>
     }
@@ -717,7 +717,7 @@ interface Linea {
     </ion-card>
 
     <h3>3 · Informe de hallazgos</h3>
-    <pre class="code"><code>{{ informe }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ informe }}</code></pre>
     <ion-button size="small" fill="outline" (click)="copiar()">Copiar informe</ion-button>
   `,
   styles: [
@@ -816,7 +816,7 @@ export class DemoAuditComponent {
     <h3>Autoevaluación por indicador (0 = no lo domino · 4 = lo podría enseñar)</h3>
     @for (u of unidades; track u.n) {
       <div class="unidad">
-        <h4><ion-icon [name]="u.icon"></ion-icon> Unidad {{ u.n }} · {{ u.title }} <small>({{ u.weight }} %)</small> <ion-chip [color]="color(promedio(u.n))">{{ promedio(u.n) | number: '1.0-0' }} %</ion-chip></h4>
+        <h4><ion-icon aria-hidden="true" [name]="u.icon"></ion-icon> Unidad {{ u.n }} · {{ u.title }} <small>({{ u.weight }} %)</small> <ion-chip [color]="color(promedio(u.n))">{{ promedio(u.n) | number: '1.0-0' }} %</ion-chip></h4>
         @for (i of indicadores(u.n); track i.id) {
           <div class="ind">
             <div class="txt"><strong>{{ i.id }}</strong> {{ i.text }}</div>
@@ -838,7 +838,7 @@ export class DemoAuditComponent {
     <ion-button size="small" fill="outline" (click)="copiar()">Copiar guion</ion-button>
 
     <h3>Lista de verificación de entrega ({{ hechas }}/{{ lista.length }})</h3>
-    <ion-progress-bar [value]="hechas / lista.length"></ion-progress-bar>
+    <ion-progress-bar aria-label="Progreso" [value]="hechas / lista.length"></ion-progress-bar>
     <div class="lista">@for (x of lista; track x.t) { <ion-checkbox [(ngModel)]="x.ok" labelPlacement="end">{{ x.t }}</ion-checkbox> }</div>
   `,
   styles: [

@@ -53,9 +53,9 @@ import { Injectable, AfterViewInit } from '@angular/core';
     <div class="phone">
       <div class="screen">
         @switch (tab) {
-          @case ('inicio') { <h4><ion-icon name="home"></ion-icon> Inicio</h4><p>Contenido de la pestaña Inicio.</p> }
-          @case ('buscar') { <h4><ion-icon name="search"></ion-icon> Buscar</h4><p>Contenido de la pestaña Buscar.</p> }
-          @case ('perfil') { <h4><ion-icon name="person"></ion-icon> Perfil</h4><p>Contenido de la pestaña Perfil.</p> }
+          @case ('inicio') { <h4><ion-icon aria-hidden="true" name="home"></ion-icon> Inicio</h4><p>Contenido de la pestaña Inicio.</p> }
+          @case ('buscar') { <h4><ion-icon aria-hidden="true" name="search"></ion-icon> Buscar</h4><p>Contenido de la pestaña Buscar.</p> }
+          @case ('perfil') { <h4><ion-icon aria-hidden="true" name="person"></ion-icon> Perfil</h4><p>Contenido de la pestaña Perfil.</p> }
         }
       </div>
       <ion-tab-bar [selectedTab]="tab">
@@ -74,7 +74,7 @@ import { Injectable, AfterViewInit } from '@angular/core';
     <ion-card color="light"><ion-card-content>Vista actual: <strong>{{ vista }}</strong></ion-card-content></ion-card>
 
     <h3>Menú lateral real de esta app</h3>
-    <ion-button (click)="open()"><ion-icon slot="start" name="menu"></ion-icon>Abrir menú</ion-button>
+    <ion-button (click)="open()"><ion-icon aria-hidden="true" slot="start" name="menu"></ion-icon>Abrir menú</ion-button>
   `,
   styles: [
     `
@@ -123,7 +123,7 @@ interface Persona {
       <ion-searchbar placeholder="Buscar nombre, ciudad o rol…" [debounce]="200" [(ngModel)]="q"></ion-searchbar>
       <ion-toggle [(ngModel)]="fallar">Simular error de red</ion-toggle>
       <ion-range label="Latencia (ms)" labelPlacement="start" [min]="0" [max]="2000" [step]="200" [pin]="true" [(ngModel)]="latencia"></ion-range>
-      <ion-button size="small" (click)="cargar()"><ion-icon slot="start" name="refresh"></ion-icon>Cargar / recargar</ion-button>
+      <ion-button size="small" (click)="cargar()"><ion-icon aria-hidden="true" slot="start" name="refresh"></ion-icon>Cargar / recargar</ion-button>
     </div>
     <p class="hint">Estado: <strong>{{ estado }}</strong> · petición <code>GET assets/data/personas.json</code></p>
 
@@ -141,7 +141,7 @@ interface Persona {
     } @else if (estado === 'error') {
       <ion-card color="danger">
         <ion-card-content>
-          <ion-icon name="close-circle"></ion-icon> No se pudo cargar. {{ mensajeError }}
+          <ion-icon aria-hidden="true" name="close-circle"></ion-icon> No se pudo cargar. {{ mensajeError }}
           <br /><ion-button size="small" color="light" (click)="reintentar()">Reintentar sin error</ion-button>
         </ion-card-content>
       </ion-card>
@@ -255,11 +255,11 @@ export class DemoCounterService {
     <h3>1 · Nota guardada en el dispositivo</h3>
     <ion-textarea label="Tu nota" labelPlacement="stacked" fill="outline" [(ngModel)]="nota" rows="3"></ion-textarea>
     <div class="row">
-      <ion-button size="small" (click)="guardar()"><ion-icon slot="start" name="save"></ion-icon>Guardar</ion-button>
+      <ion-button size="small" (click)="guardar()"><ion-icon aria-hidden="true" slot="start" name="save"></ion-icon>Guardar</ion-button>
       <ion-button size="small" fill="outline" (click)="leer()">Leer</ion-button>
       <ion-button size="small" fill="clear" color="danger" (click)="borrar()">Borrar</ion-button>
     </div>
-    <pre class="code"><code>localStorage['{{ key }}'] = {{ raw === null ? 'null' : raw }}</code></pre>
+    <pre tabindex="0" class="code"><code>localStorage['{{ key }}'] = {{ raw === null ? 'null' : raw }}</code></pre>
     <p class="hint">Pulsa F5 tras guardar: la nota sigue ahí.</p>
 
     <h3>2 · Estado compartido por un servicio</h3>
@@ -353,14 +353,14 @@ export class DemoStorageComponent {
         <ion-select-option value="cubic-bezier(.68,-.55,.27,1.55)">rebote</ion-select-option>
       </ion-select>
     </div>
-    <div class="track"><div #caja class="caja"><ion-icon name="rocket"></ion-icon></div></div>
-    <ion-button size="small" (click)="play()"><ion-icon slot="start" name="play"></ion-icon>Reproducir</ion-button>
-    <ion-button size="small" color="tertiary" (click)="loop()"><ion-icon slot="start" name="repeat"></ion-icon>Bucle</ion-button>
-    <ion-button size="small" color="medium" (click)="stop()"><ion-icon slot="start" name="stop"></ion-icon>Parar</ion-button>
-    <pre class="code"><code>{{ code }}</code></pre>
+    <div class="track"><div #caja class="caja"><ion-icon aria-hidden="true" name="rocket"></ion-icon></div></div>
+    <ion-button size="small" (click)="play()"><ion-icon aria-hidden="true" slot="start" name="play"></ion-icon>Reproducir</ion-button>
+    <ion-button size="small" color="tertiary" (click)="loop()"><ion-icon aria-hidden="true" slot="start" name="repeat"></ion-icon>Bucle</ion-button>
+    <ion-button size="small" color="medium" (click)="stop()"><ion-icon aria-hidden="true" slot="start" name="stop"></ion-icon>Parar</ion-button>
+    <pre tabindex="0" class="code"><code>{{ code }}</code></pre>
 
     <h3>GestureController: arrastra la bola</h3>
-    <div class="area"><div #puck class="puck" [style.transform]="'translate(' + x + 'px,' + y + 'px)'"><ion-icon name="hand-left"></ion-icon></div></div>
+    <div class="area"><div #puck class="puck" [style.transform]="'translate(' + x + 'px,' + y + 'px)'"><ion-icon aria-hidden="true" name="hand-left"></ion-icon></div></div>
     <p class="hint">x = {{ x | number: '1.0-0' }} · y = {{ y | number: '1.0-0' }}</p>
   `,
   styles: [
@@ -467,16 +467,16 @@ export class DemoAnimComponent implements OnDestroy, AfterViewInit {
     <br />
     <ion-input label="ID del paquete (appId)" labelPlacement="floating" fill="outline" [(ngModel)]="appId"
       [class.ion-invalid]="!idValido" [class.ion-touched]="true" errorText="Formato: com.empresa.app (minúsculas)"></ion-input>
-    <pre class="code"><code>{{ config }}</code></pre>
+    <pre tabindex="0" class="code"><code>{{ config }}</code></pre>
 
     <h3>Lista de verificación de lanzamiento ({{ marcadas }}/{{ items.length }})</h3>
-    <ion-progress-bar [value]="marcadas / items.length"></ion-progress-bar>
+    <ion-progress-bar aria-label="Progreso" [value]="marcadas / items.length"></ion-progress-bar>
     <ion-list>
       @for (it of items; track it.t) {
         <ion-item><ion-checkbox [(ngModel)]="it.ok">{{ it.t }}</ion-checkbox></ion-item>
       }
     </ion-list>
-    @if (marcadas === items.length) { <ion-card color="success"><ion-card-content><ion-icon name="checkmark-circle"></ion-icon> ¡Listo para publicar!</ion-card-content></ion-card> }
+    @if (marcadas === items.length) { <ion-card color="success"><ion-card-content><ion-icon aria-hidden="true" name="checkmark-circle"></ion-icon> ¡Listo para publicar!</ion-card-content></ion-card> }
   `,
   styles: ['.code{margin:8px 0;padding:12px;border-radius:10px;background:#14172b;color:#e6e9ff;font-size:.8rem;overflow-x:auto}'],
 })

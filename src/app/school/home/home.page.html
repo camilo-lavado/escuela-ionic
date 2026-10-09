@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Escuela Ionic</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon aria-hidden="true" slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -25,17 +25,17 @@
 
       <div class="stats">
         <div class="stat">
-          <ion-icon name="rocket"></ion-icon>
+          <ion-icon aria-hidden="true" name="rocket"></ion-icon>
           <strong>Nivel {{ school.level }}</strong>
           <span>{{ school.levelName }}</span>
         </div>
         <div class="stat">
-          <ion-icon name="trending-up"></ion-icon>
+          <ion-icon aria-hidden="true" name="trending-up"></ion-icon>
           <strong>{{ school.xp }} XP</strong>
           <span>{{ school.xpToNext }} para subir</span>
         </div>
         <div class="stat">
-          <ion-icon name="flame"></ion-icon>
+          <ion-icon aria-hidden="true" name="flame"></ion-icon>
           <strong>{{ school.streak }} {{ school.streak === 1 ? 'día' : 'días' }}</strong>
           <span>de racha</span>
         </div>
@@ -60,7 +60,7 @@
       @if (!allDone) {
         <ion-button class="cta" color="primary" [routerLink]="['/leccion', next.id]" routerDirection="forward" shape="round" size="large">
           {{ school.doneCount === 0 ? 'Empezar' : 'Continuar' }}
-          <ion-icon slot="end" name="chevron-forward"></ion-icon>
+          <ion-icon aria-hidden="true" slot="end" name="chevron-forward"></ion-icon>
         </ion-button>
         <p class="next">Siguiente: {{ next.title }}</p>
       }
@@ -94,11 +94,11 @@
     @for (x of units; track x.u.n) {
       <section class="unit" [attr.data-unit]="x.u.n">
         <header class="unit-head" (click)="toggleUnit(x.u.n)" (keydown.enter)="toggleUnit(x.u.n)" tabindex="0" role="button" [attr.aria-expanded]="openUnit === x.u.n">
-          <div class="icon-tile filled"><ion-icon [name]="x.u.icon"></ion-icon></div>
+          <div class="icon-tile filled"><ion-icon aria-hidden="true" [name]="x.u.icon"></ion-icon></div>
           <div class="info">
             <span class="kicker">{{ x.u.n === 4 ? 'Evaluación final' : 'Unidad ' + x.u.n }} · {{ x.u.weight }} % de la nota</span>
             <h2>{{ x.u.title }}</h2>
-            <ion-progress-bar [value]="x.progress"></ion-progress-bar>
+            <ion-progress-bar [value]="x.progress" [attr.aria-label]="'Progreso de la unidad ' + x.u.n"></ion-progress-bar>
             <span class="sub">{{ x.done }}/{{ x.all }} lecciones · toca para ver el temario oficial</span>
           </div>
         </header>
@@ -114,7 +114,7 @@
               <ul class="ind">
                 @for (i of x.indicators; track i.id) {
                   <li [class.ok]="i.ok">
-                    <ion-icon [name]="i.ok ? 'checkmark-circle' : 'ellipse-outline'" [color]="i.ok ? 'success' : 'medium'"></ion-icon>
+                    <ion-icon aria-hidden="true" [name]="i.ok ? 'checkmark-circle' : 'ellipse-outline'" [color]="i.ok ? 'success' : 'medium'"></ion-icon>
                     <span><strong>{{ i.id }}</strong> {{ i.text }} <em>({{ i.done }}/{{ i.total }} lecciones)</em></span>
                   </li>
                 }
@@ -128,7 +128,7 @@
           <ion-card class="lesson-card lift rise" [style.--i]="i" button [routerLink]="['/leccion', item.l.id]" routerDirection="forward">
             <div class="lesson-row">
               <div class="icon-tile" [class.done]="school.isDone(item.l.id)">
-                @if (school.isDone(item.l.id)) { <ion-icon name="checkmark"></ion-icon> } @else { {{ item.n }} }
+                @if (school.isDone(item.l.id)) { <ion-icon aria-hidden="true" name="checkmark"></ion-icon> } @else { {{ item.n }} }
               </div>
               <div class="lesson-body">
                 <div class="meta">

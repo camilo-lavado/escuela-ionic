@@ -1,4 +1,4 @@
-<pre class="code"><code>@for (p of parts; track $index; let i = $index) {<span>{{ p }}</span>@if (i < values.length) {<button type="button" class="slot" [class.filled]="values[i]" [ngClass]="state(i)" (click)="clear(i)">{{ values[i] || '   ' }}</button>}}</code></pre>
+<pre tabindex="0" class="code"><code>@for (p of parts; track $index; let i = $index) {<span>{{ p }}</span>@if (i < values.length) {<button type="button" class="slot" [attr.aria-label]="values[i] ? 'Hueco ' + (i + 1) + ': ' + values[i] + '. Toca para vaciar' : 'Hueco ' + (i + 1) + ' vacío'" [class.filled]="values[i]" [ngClass]="state(i)" (click)="clear(i)">{{ values[i] || '   ' }}</button>}}</code></pre>
 
 <div class="bank">
   @for (o of fill.options; track o) {
@@ -13,8 +13,8 @@
 
 @if (checked) {
   <p class="msg" [class.ok]="ok">
-    <ion-icon [name]="ok ? 'checkmark-circle' : 'close-circle'"></ion-icon> {{ ok ? '¡Perfecto! El código es correcto.' : 'Hay huecos incorrectos (en rojo). Toca uno para vaciarlo.' }}
+    <ion-icon aria-hidden="true" [name]="ok ? 'checkmark-circle' : 'close-circle'"></ion-icon> {{ ok ? '¡Perfecto! El código es correcto.' : 'Hay huecos incorrectos (en rojo). Toca uno para vaciarlo.' }}
   </p>
 } @else if (solved) {
-  <p class="msg ok"><ion-icon name="checkmark-circle"></ion-icon> Ejercicio ya resuelto. Puedes repetirlo cuando quieras.</p>
+  <p class="msg ok"><ion-icon aria-hidden="true" name="checkmark-circle"></ion-icon> Ejercicio ya resuelto. Puedes repetirlo cuando quieras.</p>
 }

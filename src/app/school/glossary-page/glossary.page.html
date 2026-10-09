@@ -3,7 +3,7 @@
     <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
     <ion-title>Glosario de componentes</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon aria-hidden="true" slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -30,10 +30,10 @@
         </ion-item>
         @if (open === e.name) {
           <ion-card-content>
-            <pre class="code"><code>{{ e.code }}</code></pre>
-            <ion-button size="small" (click)="tryIt(e)"><ion-icon slot="start" name="flask"></ion-icon>Probar en el Playground</ion-button>
+            <pre tabindex="0" class="code"><code>{{ e.code }}</code></pre>
+            <ion-button size="small" (click)="tryIt(e)"><ion-icon aria-hidden="true" slot="start" name="flask"></ion-icon>Probar en el Playground</ion-button>
             @if (e.lesson) {
-              <ion-button size="small" fill="outline" (click)="goLesson(e.lesson)"><ion-icon slot="start" name="book"></ion-icon>Ver lección</ion-button>
+              <ion-button size="small" fill="outline" (click)="goLesson(e.lesson)"><ion-icon aria-hidden="true" slot="start" name="book"></ion-icon>Ver lección</ion-button>
             }
           </ion-card-content>
         }

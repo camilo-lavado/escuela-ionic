@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Lección {{ index + 1 }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon aria-hidden="true" slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -19,7 +19,7 @@
   } @else {
     <main class="wrap" [attr.data-unit]="lesson.unit">
       <header class="head raised" [attr.data-unit]="lesson.unit">
-        <div class="icon-tile filled big"><ion-icon [name]="unitIcon"></ion-icon></div>
+        <div class="icon-tile filled big"><ion-icon aria-hidden="true" [name]="unitIcon"></ion-icon></div>
         <h1>{{ lesson.title }}</h1>
         <p class="goal"><strong>Objetivo:</strong> {{ lesson.goal }}</p>
         <ion-chip color="medium">{{ lesson.level }}</ion-chip>
@@ -27,7 +27,7 @@
         <ion-chip color="tertiary">{{ lesson.unit === 4 ? 'Evaluación final' : 'Unidad ' + lesson.unit }}</ion-chip>
         @for (id of lesson.indicators; track id) { <ion-chip outline="true" color="tertiary">Indicador {{ id }}</ion-chip> }
         @if (school.isDone(lesson.id)) {
-          <ion-chip color="success"><ion-icon name="checkmark"></ion-icon> Completada</ion-chip>
+          <ion-chip color="success"><ion-icon aria-hidden="true" name="checkmark"></ion-icon> Completada</ion-chip>
         }
       </header>
 
@@ -43,7 +43,7 @@
               @if (s.code) {
                 <div class="code-wrap">
                   <button class="copy" type="button" (click)="copy(s.code)">Copiar</button>
-                  <pre><code>{{ s.code }}</code></pre>
+                  <pre tabindex="0"><code>{{ s.code }}</code></pre>
                 </div>
               }
             </div>
@@ -53,7 +53,7 @@
 
       @if (lesson.keyPoints.length) {
         <ion-card class="keys">
-          <ion-card-header><ion-card-title><ion-icon name="pin"></ion-icon> Lo que debes recordar</ion-card-title></ion-card-header>
+          <ion-card-header><ion-card-title><ion-icon aria-hidden="true" name="pin"></ion-icon> Lo que debes recordar</ion-card-title></ion-card-header>
           <ion-card-content>
             <ul>
               @for (k of lesson.keyPoints; track k) { <li>{{ k }}</li> }
@@ -63,7 +63,7 @@
       }
       @if (lesson.pitfalls?.length) {
         <ion-card class="pitfalls">
-          <ion-card-header><ion-card-title><ion-icon name="warning"></ion-icon> Errores frecuentes</ion-card-title></ion-card-header>
+          <ion-card-header><ion-card-title><ion-icon aria-hidden="true" name="warning"></ion-icon> Errores frecuentes</ion-card-title></ion-card-header>
           <ion-card-content>
             <ul>
               @for (k of lesson.pitfalls; track k) { <li>{{ k }}</li> }
@@ -95,7 +95,7 @@
 
       <h2><span class="num">{{ fill ? 4 : 3 }}</span> Reto</h2>
       <ion-card color="tertiary">
-        <ion-card-content><ion-icon name="flag"></ion-icon> {{ lesson.challenge }}</ion-card-content>
+        <ion-card-content><ion-icon aria-hidden="true" name="flag"></ion-icon> {{ lesson.challenge }}</ion-card-content>
       </ion-card>
 
       <h2><span class="num">{{ fill ? 5 : 4 }}</span> Quiz ({{ score }}/{{ lesson.quiz.length }})</h2>
@@ -119,9 +119,9 @@
           @if (picks[qi] >= 0) {
             <ion-card-content class="feedback">
               @if (picks[qi] === q.answer) {
-                <ion-icon color="success" name="checkmark-circle"></ion-icon> ¡Correcto! {{ q.why }}
+                <ion-icon aria-hidden="true" color="success" name="checkmark-circle"></ion-icon> ¡Correcto! {{ q.why }}
               } @else {
-                <ion-icon color="danger" name="close-circle"></ion-icon> Casi. Vuelve a intentarlo.
+                <ion-icon aria-hidden="true" color="danger" name="close-circle"></ion-icon> Casi. Vuelve a intentarlo.
               }
             </ion-card-content>
           }
@@ -153,7 +153,7 @@
             {{ next.title }} →
           </ion-button>
         } @else {
-          <ion-button routerLink="/" routerDirection="root">Ir al inicio<ion-icon name="school"></ion-icon></ion-button>
+          <ion-button routerLink="/" routerDirection="root">Ir al inicio<ion-icon aria-hidden="true" name="school"></ion-icon></ion-button>
         }
       </nav>
     </main>

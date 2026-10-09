@@ -3,7 +3,7 @@
     <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
     <ion-title>Simulacro</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon aria-hidden="true" slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -12,7 +12,7 @@
   <div class="wrap">
     @switch (phase) {
       @case ('setup') {
-        <h1><ion-icon name="reader"></ion-icon> Simulacro de evaluación</h1>
+        <h1><ion-icon aria-hidden="true" name="reader"></ion-icon> Simulacro de evaluación</h1>
         <p class="hint">
           Preguntas de todas las lecciones, mezcladas, sin ayudas hasta el final. Elige el alcance
           y mide tu nivel antes de la evaluación real. Mejor resultado: <strong>{{ school.examBest }} %</strong> ·
@@ -45,9 +45,9 @@
       @case ('running') {
         <div class="top">
           <span>Pregunta {{ index + 1 }} / {{ questions.length }} · respondidas {{ answered }}</span>
-          @if (timed) { <strong [class.low]="secondsLeft < 30"><ion-icon name="time"></ion-icon> {{ mmss }}</strong> }
+          @if (timed) { <strong [class.low]="secondsLeft < 30"><ion-icon aria-hidden="true" name="time"></ion-icon> {{ mmss }}</strong> }
         </div>
-        <ion-progress-bar [value]="(index + 1) / questions.length"></ion-progress-bar>
+        <ion-progress-bar [value]="(index + 1) / questions.length" aria-label="Progreso del simulacro"></ion-progress-bar>
 
         <ion-card>
           <ion-card-header>
@@ -119,7 +119,7 @@
               @if (answers[i] !== q.answer) {
                 <p>Correcta: <strong class="ok">{{ letter(q.answer) }}. {{ q.options[q.answer] }}</strong></p>
               }
-              <p class="hint"><ion-icon name="bulb"></ion-icon> {{ q.why }}</p>
+              <p class="hint"><ion-icon aria-hidden="true" name="bulb"></ion-icon> {{ q.why }}</p>
             </ion-card-content>
           </ion-card>
         }

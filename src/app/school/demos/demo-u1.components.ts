@@ -60,9 +60,9 @@ interface Layer {
       }
     </ol>
     <ion-button size="small" (click)="advance()">{{ step < steps.length - 1 ? 'Siguiente paso →' : 'Reiniciar' }}</ion-button>
-    <ion-button size="small" fill="outline" (click)="auto()" [disabled]="running"><ion-icon slot="start" name="play"></ion-icon>Reproducir</ion-button>
+    <ion-button size="small" fill="outline" (click)="auto()" [disabled]="running"><ion-icon aria-hidden="true" slot="start" name="play"></ion-icon>Reproducir</ion-button>
     <h3>Flujo de comandos</h3>
-    <pre class="code"><code>ionic start miApp tabs --type=angular
+    <pre tabindex="0" class="code"><code>ionic start miApp tabs --type=angular
 ionic serve                      # desarrollo
 ionic build                      # genera www/
 ionic cap add android            # crea android/
@@ -158,12 +158,12 @@ export class DemoArchComponent implements OnDestroy {
         </ion-list>
       </div>
       <div class="box c" [class.hot]="active === 'c'"><h4>CONTROLADOR</h4><small>clase del componente .ts</small>
-        <pre class="code"><code>agregar() {{ '{' }}
+        <pre tabindex="0" class="code"><code>agregar() {{ '{' }}
   this.tareas.agregar(this.texto);
   this.texto = '';
 {{ '}' }}</code></pre></div>
       <div class="box m" [class.hot]="active === 'm'"><h4>MODELO</h4><small>servicio + interfaces</small>
-        <pre class="code"><code>{{ modeloJson }}</code></pre></div>
+        <pre tabindex="0" class="code"><code>{{ modeloJson }}</code></pre></div>
     </div>
     <ion-card color="light"><ion-card-content>{{ mensaje }}</ion-card-content></ion-card>
 
@@ -347,9 +347,9 @@ export class DemoCompareComponent {
     </div>
     <p>Razón de contraste: <strong>{{ ratio | number: '1.2-2' }} : 1</strong></p>
     <div class="chips">
-      <ion-chip [color]="ratio >= 4.5 ? 'success' : 'danger'">AA texto normal (≥ 4.5) <ion-icon [name]="ratio >= 4.5 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
-      <ion-chip [color]="ratio >= 3 ? 'success' : 'danger'">AA texto grande / UI (≥ 3) <ion-icon [name]="ratio >= 3 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
-      <ion-chip [color]="ratio >= 7 ? 'success' : 'danger'">AAA texto normal (≥ 7) <ion-icon [name]="ratio >= 7 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
+      <ion-chip [color]="ratio >= 4.5 ? 'success' : 'danger'">AA texto normal (≥ 4.5) <ion-icon aria-hidden="true" [name]="ratio >= 4.5 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
+      <ion-chip [color]="ratio >= 3 ? 'success' : 'danger'">AA texto grande / UI (≥ 3) <ion-icon aria-hidden="true" [name]="ratio >= 3 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
+      <ion-chip [color]="ratio >= 7 ? 'success' : 'danger'">AAA texto normal (≥ 7) <ion-icon aria-hidden="true" [name]="ratio >= 7 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
     </div>
     <ion-button size="small" fill="outline" (click)="fg = '#767676'; bg = '#ffffff'">Gris sobre blanco</ion-button>
     <ion-button size="small" fill="outline" (click)="fg = '#ffffff'; bg = '#3880ff'">Blanco sobre azul Ionic</ion-button>
@@ -451,7 +451,7 @@ export class DemoUiComponent {
   ],
   template: `
     <h3>Arregla la pantalla de inicio de sesión ({{ puntos }} / 100)</h3>
-    <ion-progress-bar [value]="puntos / 100" [color]="puntos >= 100 ? 'success' : 'warning'"></ion-progress-bar>
+    <ion-progress-bar aria-label="Progreso" [value]="puntos / 100" [color]="puntos >= 100 ? 'success' : 'warning'"></ion-progress-bar>
     <div class="checks">
       @for (f of arreglos; track f.id) {
         <ion-checkbox [(ngModel)]="f.on" labelPlacement="end">{{ f.text }} <small>({{ f.heur }})</small></ion-checkbox>
@@ -470,17 +470,17 @@ export class DemoUiComponent {
       <button type="button" class="go" [class.sec]="!fix('jerarquia')" [style.minHeight.px]="fix('tactil') ? 48 : 26" [style.fontSize.px]="fix('tactil') ? 16 : 11" (click)="enviar()">
         {{ cargando ? 'Entrando…' : 'Entrar' }}
       </button>
-      @if (cargando && fix('feedback')) { <ion-progress-bar type="indeterminate"></ion-progress-bar> }
+      @if (cargando && fix('feedback')) { <ion-progress-bar aria-label="Progreso" type="indeterminate"></ion-progress-bar> }
       <button type="button" class="link" [style.minHeight.px]="fix('tactil') ? 44 : 20">¿Olvidaste tu contraseña?</button>
     </div>
     <p class="hint">Pulsa «Entrar»: con «retroalimentación» verás un indicador de carga; con «error claro» el mensaje cambia.</p>
 
     <h3>Medidor de objetivo táctil</h3>
     <ion-range label="Tamaño (px)" labelPlacement="start" [min]="20" [max]="64" [pin]="true" [(ngModel)]="tam"></ion-range>
-    <div class="target"><div class="btn" [style.width.px]="tam" [style.height.px]="tam"><ion-icon name="finger-print"></ion-icon></div>
+    <div class="target"><div class="btn" [style.width.px]="tam" [style.height.px]="tam"><ion-icon aria-hidden="true" name="finger-print"></ion-icon></div>
       <div>
-        <ion-chip [color]="tam >= 44 ? 'success' : 'danger'">iOS (44 pt) <ion-icon [name]="tam >= 44 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
-        <ion-chip [color]="tam >= 48 ? 'success' : 'danger'">Material (48 dp) <ion-icon [name]="tam >= 48 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
+        <ion-chip [color]="tam >= 44 ? 'success' : 'danger'">iOS (44 pt) <ion-icon aria-hidden="true" [name]="tam >= 44 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
+        <ion-chip [color]="tam >= 48 ? 'success' : 'danger'">Material (48 dp) <ion-icon aria-hidden="true" [name]="tam >= 48 ? 'checkmark' : 'close'"></ion-icon></ion-chip>
       </div></div>
   `,
   styles: [
