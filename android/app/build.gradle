@@ -1,5 +1,15 @@
 apply plugin: 'com.android.application'
 
+// Firma de release: se lee de android/keystore.properties (no se sube a git) o, en CI,
+// de las variables de entorno ANDROID_KEYSTORE_FILE / _PASSWORD, ANDROID_KEY_ALIAS / _PASSWORD.
+// Sin credenciales el release se compila igual pero sin firmar (no instalable ni publicable).
+def keystoreProps = new Properties()
+def keystoreFile = rootProject.file('keystore.properties')
+if (keystoreFile.exists()) {
+    keystoreFile.withInputStream { keystoreProps.load(it) }
+}
+def signing = { String prop, String env -> keystoreProps.getProperty(prop) ?: System.getenv(env) }
+
 android {
     namespace = "com.escuelaionic.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,8 +17,9 @@ android {
         applicationId "com.escuelaionic.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // Se puede sobrescribir en la compilación: ./gradlew bundleRelease -PversionCode=2 -PversionName=1.1
+        versionCode (project.findProperty('versionCode') ?: 1).toInteger()
+        versionName (project.findProperty('versionName') ?: '1.0')
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +27,22 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            def storePath = signing('storeFile', 'ANDROID_KEYSTORE_FILE')
+            if (storePath) {
+                storeFile rootProject.file(storePath)
+                storePassword signing('storePassword', 'ANDROID_KEYSTORE_PASSWORD')
+                keyAlias signing('keyAlias', 'ANDROID_KEY_ALIAS')
+                keyPassword signing('keyPassword', 'ANDROID_KEY_PASSWORD')
+            }
+        }
+    }
     buildTypes {
         release {
+            if (signing('storeFile', 'ANDROID_KEYSTORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

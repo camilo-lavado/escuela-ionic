@@ -8,7 +8,7 @@ El proyecto ya tiene la plataforma Android añadida (`android/`), con icono, pan
 2. Ábrelo una vez y deja que descargue el SDK. En *More Actions → SDK Manager* comprueba que estén **Android SDK Platform 36** y **Android SDK Build-Tools**.
 3. (Opcional, para probar sin móvil) crea un emulador en *Device Manager* (por ejemplo Pixel 7 con Android 14).
 
-El script detecta solo el SDK y el JDK que trae Android Studio. Si tienes el SDK en otra carpeta, define la variable de entorno `ANDROID_HOME`.
+El script detecta solo el SDK y un JDK compatible. **Gradle 8.14 necesita Java 17–21**: el JDK que trae Android Studio (JBR) puede ser más nuevo (en Android Studio reciente es Java 25) y fallaría con `Unsupported class file major version`. Por eso en Linux el script prefiere `/usr/lib/jvm/java-21-openjdk` (Arch/CachyOS: `sudo pacman -S jdk21-openjdk`) y, si no existe, el JBR o `JAVA_HOME`. Si tienes el SDK en otra carpeta, define `ANDROID_HOME`.
 
 ## 2. Generar el APK
 
@@ -63,12 +63,26 @@ npm run android:sync
 
 ## Publicar en Google Play (opcional)
 
-El APK de depuración está firmado con una clave de pruebas: sirve para instalar y mostrar, **no para Play**. Para publicar:
+El APK de depuración está firmado con una clave de pruebas: sirve para instalar y mostrar, **no para Play**. Para publicar necesitas un **App Bundle (`.aab`) firmado**:
 
 1. Crea una clave de firma y **guárdala a salvo** (si la pierdes no podrás actualizar la app):
-   `keytool -genkey -v -keystore escuela.jks -alias escuela -keyalg RSA -keysize 2048 -validity 10000`
-2. En Android Studio: *Build → Generate Signed App Bundle / APK → Android App Bundle* (o `gradlew bundleRelease` con la firma configurada).
-3. Sube el `.aab` en la Google Play Console (cuenta de desarrollador: pago único de 25 USD), con capturas, descripción y política de privacidad.
+   `keytool -genkeypair -v -keystore android/release.jks -alias escuela -keyalg RSA -keysize 2048 -validity 10000`
+2. Copia `android/keystore.properties.example` como `android/keystore.properties` y rellénalo con tus datos. Ambos archivos están en `.gitignore`: **nunca los subas** al repositorio.
+3. Genera el paquete:
+
+   ```bash
+   npm run aab           # App Bundle para Google Play  → android/app/build/outputs/bundle/release/app-release.aab
+   npm run apk:release   # APK release firmado          → android/app/build/outputs/apk/release/app-release.apk
+   ```
+
+   Sin `keystore.properties` el release se genera igualmente pero **sin firmar** (el script lo avisa).
+4. Sube el `.aab` en la Google Play Console (cuenta de desarrollador: pago único de 25 USD), con capturas, descripción y política de privacidad.
+
+Para cada nueva versión sube `versionCode` (debe ser mayor que el anterior): `cd android && ./gradlew bundleRelease -PversionCode=2 -PversionName=1.1`, o edita los valores por defecto de `android/app/build.gradle`.
+
+### Firmar en CI (GitHub Actions)
+
+En lugar de `keystore.properties`, define los secretos del repositorio `ANDROID_KEYSTORE_BASE64` (el `.jks` en base64: `base64 -w0 android/release.jks`), `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` y `ANDROID_KEY_PASSWORD`. El workflow `release-android.yml` los usa para generar el AAB firmado cuando creas una etiqueta `v*` o lo lanzas a mano.
 
 ## Problemas frecuentes
 
@@ -77,6 +91,7 @@ El APK de depuración está firmado con una clave de pruebas: sirve para instala
 | «No se encontró el Android SDK» | Instala Android Studio o define `ANDROID_HOME`. |
 | `SDK location not found` | Crea `android/local.properties` con `sdk.dir=RUTA_DEL_SDK` (el script lo hace solo). |
 | Error de versión de Java | Usa el JDK de Android Studio (el script lo prefiere) o un JDK 17–21. |
+| `Unsupported class file major version 69` | Gradle se ejecuta con Java 25. Instala/usa JDK 21 (ver arriba) o define `JAVA_HOME`. |
 | «Failed to install … Android SDK Platform 36» | Instálala desde *SDK Manager*. |
 | Pantalla en blanco al abrir | Ejecuta `npm run android:sync` para copiar la última versión de la web. |
 | La cámara no abre | Revisa que el permiso esté concedido en Ajustes → Apps → Escuela Ionic. |

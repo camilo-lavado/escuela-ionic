@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 /**
- * Genera el APK de depuración de Android:  npm run apk
+ * Genera el APK/AAB de Android:
+ *   npm run apk           → APK de depuración  (android/app/build/outputs/apk/debug/app-debug.apk)
+ *   npm run apk:release   → APK release        (…/apk/release/app-release.apk)
+ *   npm run aab           → App Bundle release (…/bundle/release/app-release.aab), el formato de Google Play
+ * Los release se firman si existe android/keystore.properties (ver ANDROID.md); si no, salen sin firmar.
  *
  * Pasos: compilar la web (producción) → sincronizar con Capacitor → compilar con Gradle.
  * Resultado: android/app/build/outputs/apk/debug/app-debug.apk
@@ -13,6 +17,7 @@ import { existsSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 
+const target = process.argv.includes('--aab') ? 'aab' : process.argv.includes('--release') ? 'release' : 'debug';
 const root = resolve(import.meta.dirname, '..');
 const androidDir = join(root, 'android');
 const isWin = process.platform === 'win32';
@@ -82,10 +87,19 @@ function run(cmd, args, cwd = root) {
 
 run('npx', ['ionic', 'build', '--prod']);
 run('npx', ['cap', 'sync', 'android']);
-run(isWin ? 'gradlew.bat' : './gradlew', ['assembleDebug'], androidDir);
+const task = { debug: 'assembleDebug', release: 'assembleRelease', aab: 'bundleRelease' }[target];
+run(isWin ? 'gradlew.bat' : './gradlew', [task], androidDir);
 
-const apk = join(androidDir, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
-if (!existsSync(apk)) fail('Gradle terminó, pero no se encontró el APK en: ' + apk);
-const mb = (statSync(apk).size / 1024 / 1024).toFixed(1);
-console.log(`\n✔ APK listo (${mb} MB):\n  ${apk}\n`);
-console.log('Instálalo en un móvil conectado por USB con:  adb install -r "' + apk + '"');
+const outputs = {
+  debug: ['apk', 'debug', 'app-debug.apk'],
+  release: ['apk', 'release', existsSync(join(androidDir, 'keystore.properties')) || process.env.ANDROID_KEYSTORE_FILE ? 'app-release.apk' : 'app-release-unsigned.apk'],
+  aab: ['bundle', 'release', 'app-release.aab'],
+}[target];
+const out = join(androidDir, 'app', 'build', 'outputs', ...outputs);
+if (!existsSync(out)) fail('Gradle terminó, pero no se encontró el resultado en: ' + out);
+const mb = (statSync(out).size / 1024 / 1024).toFixed(1);
+console.log(`\n✔ ${target === 'aab' ? 'AAB' : 'APK'} ${target === 'debug' ? 'de depuración' : 'release'} listo (${mb} MB):\n  ${out}\n`);
+if (target !== 'debug' && !existsSync(join(androidDir, 'keystore.properties')) && !process.env.ANDROID_KEYSTORE_FILE) {
+  console.log('⚠ Sin firmar: crea android/keystore.properties (ver ANDROID.md) para poder instalarlo o subirlo a Google Play.');
+}
+if (target === 'debug') console.log('Instálalo en un móvil conectado por USB con:  adb install -r "' + out + '"');
