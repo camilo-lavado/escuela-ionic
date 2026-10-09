@@ -73,3 +73,7 @@ Thumbs.db
 *.jks
 *.keystore
 keystore.properties
+
+# Playwright
+/test-results
+/playwright-report
