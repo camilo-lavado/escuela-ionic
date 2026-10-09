@@ -3,7 +3,7 @@
     <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
     <ion-title>Logros</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon aria-hidden="true" slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -25,13 +25,13 @@
           <div class="info">
             <strong>{{ school.levelName }}</strong>
             <span>{{ school.xp }} XP · faltan {{ school.xpToNext }} para el siguiente nivel</span>
-            <ion-progress-bar [value]="school.levelProgress" color="warning"></ion-progress-bar>
+            <ion-progress-bar [value]="school.levelProgress" color="warning" aria-label="Progreso hacia el siguiente nivel"></ion-progress-bar>
           </div>
         </div>
         <div class="stats">
           <div><strong>{{ school.doneCount }}/{{ school.total }}</strong><span>lecciones</span></div>
           <div><strong>{{ school.fillCount }}</strong><span>ejercicios</span></div>
-          <div><strong><ion-icon name="flame"></ion-icon> {{ school.streak }}</strong><span>racha</span></div>
+          <div><strong><ion-icon aria-hidden="true" name="flame"></ion-icon> {{ school.streak }}</strong><span>racha</span></div>
           <div><strong>{{ school.playRuns }}</strong><span>ejecuciones</span></div>
         </div>
       </ion-card-content>
@@ -47,11 +47,37 @@
       <p class="hint">Tu progreso se guarda en una base de datos SQLite (tablas de lecciones, quiz, insignias, simulacros y ajustes).</p>
     }
 
+    <h2>Copia de seguridad</h2>
+    <ion-card class="backup">
+      <ion-card-content>
+        <p class="hint">
+          Tu progreso vive solo en este dispositivo. Guarda una copia para pasarlo a otro o por si desinstalas la app.
+        </p>
+        <div class="row">
+          @if (!native) {
+            <ion-button size="small" (click)="download()"><ion-icon aria-hidden="true" slot="start" name="download"></ion-icon>Descargar</ion-button>
+          }
+          <ion-button size="small" fill="outline" (click)="copy()"><ion-icon aria-hidden="true" slot="start" name="copy"></ion-icon>Copiar</ion-button>
+          <ion-button size="small" fill="outline" (click)="file.click()"><ion-icon aria-hidden="true" slot="start" name="cloud-upload"></ion-icon>Importar archivo</ion-button>
+          <input #file type="file" accept="application/json,.json" hidden (change)="onFile($event)" aria-label="Archivo de copia de seguridad" />
+        </div>
+        <ion-input
+          label="…o pega aquí una copia"
+          labelPlacement="floating"
+          fill="outline"
+          class="paste"
+          [value]="pasted"
+          (ionInput)="onPaste($event)"
+        ></ion-input>
+        <ion-button size="small" fill="outline" [disabled]="!pasted.trim()" (click)="restorePasted()">Importar texto</ion-button>
+      </ion-card-content>
+    </ion-card>
+
     <h2>Insignias ({{ unlockedCount }}/{{ badges.length }})</h2>
     <div class="badges">
       @for (b of badges; track b.id) {
         <div class="badge" [class.locked]="!school.hasBadge(b.id)">
-          <div class="emo"><ion-icon [name]="school.hasBadge(b.id) ? b.icon : 'lock-closed'"></ion-icon></div>
+          <div class="emo"><ion-icon aria-hidden="true" [name]="school.hasBadge(b.id) ? b.icon : 'lock-closed'"></ion-icon></div>
           <strong>{{ b.title }}</strong>
           <span>{{ b.desc }}</span>
         </div>
@@ -61,7 +87,7 @@
     <h2>Diploma</h2>
     @if (allDone) {
       <div class="diploma">
-        <div class="ribbon"><ion-icon name="school"></ion-icon></div>
+        <div class="ribbon"><ion-icon aria-hidden="true" name="school"></ion-icon></div>
         <p class="small">Certificado de finalización</p>
         <h3>{{ school.name || 'Estudiante de Ionic' }}</h3>
         <p>ha completado las {{ school.total }} lecciones de la</p>
@@ -72,7 +98,7 @@
     } @else {
       <ion-card>
         <ion-card-content>
-          <ion-icon name="lock-closed"></ion-icon> Completa las {{ school.total }} lecciones para desbloquear tu diploma
+          <ion-icon aria-hidden="true" name="lock-closed"></ion-icon> Completa las {{ school.total }} lecciones para desbloquear tu diploma
           ({{ school.total - school.doneCount }} restantes).
         </ion-card-content>
       </ion-card>

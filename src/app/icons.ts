@@ -1,6 +1,7 @@
 import { addIcons } from 'ionicons';
 import {
   alarm, book, bug, bulb, camera, checkmark, checkmarkCircle, chevronForward, close, closeCircle,
+  cloudUpload, copy, download,
   codeSlash, cut, documentText, ellipseOutline, fingerPrint, flag, flame, flash, flask, handLeft,
   hardwareChip, home, key, leaf, location, lockClosed, lockOpen, locate, menu, moon, notifications,
   person, pin, play, radioButtonOn, reader, refresh, repeat, rocket, save, school, search,
@@ -16,6 +17,7 @@ import {
 export function registerIcons(): void {
   addIcons({
     alarm, book, bug, bulb, camera, checkmark, checkmarkCircle, chevronForward, close, closeCircle,
+  cloudUpload, copy, download,
     codeSlash, cut, documentText, ellipseOutline, fingerPrint, flag, flame, flash, flask, handLeft,
     hardwareChip, home, key, leaf, location, lockClosed, lockOpen, locate, menu, moon, notifications,
     person, pin, play, radioButtonOn, reader, refresh, repeat, rocket, save, school, search,

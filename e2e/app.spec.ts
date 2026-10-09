@@ -26,9 +26,9 @@ test.describe('Inicio, búsqueda y tema', () => {
 
   test('el progreso y el nombre se conservan al recargar', async ({ page }) => {
     await open(page, '/perfil');
-    await page.locator('ion-input input').fill('Camilo');
+    await page.locator('ion-input[label="Tu nombre"] input').fill('Camilo');
     await page.reload();
-    await expect(page.locator('ion-input input')).toHaveValue('Camilo');
+    await expect(page.locator('ion-input[label="Tu nombre"] input')).toHaveValue('Camilo');
   });
 });
 
@@ -122,5 +122,52 @@ test.describe('Demos con dispositivo', () => {
     await demo.getByRole('button', { name: 'Cerrar' }).click();
     await expect(demo.getByRole('button', { name: 'Abrir cámara' })).toBeEnabled();
     assertNoErrors();
+  });
+});
+
+test.describe('Copia de seguridad', () => {
+  const copia = {
+    app: 'escuela-ionic', version: 1, exportedAt: '2026-10-09T12:00:00Z',
+    done: ['intro', 'arquitectura'], firstTry: ['intro:0'], fills: ['intro'], badges: ['primera'],
+    xp: 340, name: 'Copia Test', streak: 1, lastDay: '2026-10-09', playRuns: 0, dark: null,
+    examBest: 0, examRuns: 0, snippets: [{ name: 'importado', code: '<ion-button>Hola</ion-button>' }],
+  };
+
+  test('importar un archivo reemplaza el progreso y se conserva al recargar', async ({ page }) => {
+    await open(page, '/perfil');
+    await page.locator('input[type=file]').setInputFiles({
+      name: 'copia.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(copia)),
+    });
+    await page.getByRole('button', { name: 'Importar', exact: true }).click(); // confirmación
+    await expect(page.getByText('2/33')).toBeVisible();
+    await page.waitForTimeout(2500);
+    await page.reload();
+    await expect(page.getByText('2/33')).toBeVisible();
+    await expect(page.locator('ion-input[label="Tu nombre"] input')).toHaveValue('Copia Test');
+    await open(page, '/playground');
+    await expect(page.locator('.wrap ion-list ion-item')).toHaveText(/importado/);
+  });
+
+  test('exportar descarga un JSON que se puede volver a importar', async ({ page }) => {
+    await open(page, '/perfil');
+    await page.locator('input[type=file]').setInputFiles({
+      name: 'copia.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(copia)),
+    });
+    await page.getByRole('button', { name: 'Importar', exact: true }).click();
+    await expect(page.getByText('2/33')).toBeVisible();
+
+    const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Descargar' }).click()]);
+    expect(download.suggestedFilename()).toMatch(/^escuela-ionic-\d{4}-\d{2}-\d{2}\.json$/);
+    const exported = JSON.parse(await (await import('node:fs/promises')).readFile(await download.path(), 'utf8'));
+    expect(exported).toMatchObject({ app: 'escuela-ionic', version: 1, done: ['intro', 'arquitectura'], xp: 340, name: 'Copia Test' });
+  });
+
+  test('rechaza un archivo que no es una copia y no cambia nada', async ({ page }) => {
+    await open(page, '/perfil');
+    await page.locator('input[type=file]').setInputFiles({
+      name: 'malo.json', mimeType: 'application/json', buffer: Buffer.from('{"hola":"mundo"}'),
+    });
+    await expect(page.getByText('no es una copia de Escuela Ionic')).toBeVisible();
+    await expect(page.getByText('0/33')).toBeVisible();
   });
 });

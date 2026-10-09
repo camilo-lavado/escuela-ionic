@@ -146,3 +146,16 @@ h2 {
   font-size: 0.82rem;
   color: var(--n-muted);
 }
+
+.backup {
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 14px;
+  }
+
+  .paste {
+    margin-bottom: 10px;
+  }
+}

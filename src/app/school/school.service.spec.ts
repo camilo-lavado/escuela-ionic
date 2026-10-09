@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { ToastController } from '@ionic/angular';
-import { SchoolService, XP_FILL, XP_FIRST_TRY, XP_LESSON, XP_PER_LEVEL } from './school.service';
+import { BACKUP_APP, BACKUP_VERSION, parseBackup } from './progress-backup';
+import { BADGES, SchoolService, XP_FILL, XP_FIRST_TRY, XP_LESSON, XP_PER_LEVEL } from './school.service';
 import { MemoryProgressRepository, ProgressRepository } from './progress.repository';
 import { LESSONS } from './lessons';
 
@@ -139,5 +140,45 @@ describe('SchoolService', () => {
     expect(s.storage()).toBe('memoria');
     s.complete('intro');
     expect(s.isDone('intro')).toBe(true);
+  });
+
+  it('exportar e importar conserva el progreso en otra instancia', async () => {
+    const a = await crear();
+    a.name = 'Ana';
+    a.complete('intro');
+    a.awardFirstTry('intro', 0);
+    a.awardFill('intro');
+    a.saveSnippet('mio', '<ion-button></ion-button>');
+    a.registerExam({ scope: 'all', total: 10, correct: 9 });
+
+    const copia = parseBackup(JSON.stringify(a.exportProgress()), {
+      lessons: new Set(LESSONS.map((l) => l.id)),
+      badges: new Set(BADGES.map((b) => b.id)),
+    });
+    const b = await crear(); // instancia nueva y vacía
+    expect(b.doneCount).toBe(0);
+    b.importProgress(copia);
+
+    expect(b.isDone('intro')).toBe(true);
+    expect(b.firstTryCount('intro')).toBe(1);
+    expect(b.fillDone('intro')).toBe(true);
+    expect(b.xp).toBe(a.xp);
+    expect(b.name).toBe('Ana');
+    expect(b.snippets.map((x) => x.name)).toEqual(['mio']);
+    expect(b.examBest).toBe(90);
+  });
+
+  it('importar reemplaza el progreso previo en lugar de mezclarlo', async () => {
+    const s = await crear();
+    s.complete('arquitectura');
+    s.saveSnippet('viejo', 'x');
+    const vacia = parseBackup(JSON.stringify({ app: BACKUP_APP, version: BACKUP_VERSION }), {
+      lessons: new Set(LESSONS.map((l) => l.id)),
+      badges: new Set(BADGES.map((b) => b.id)),
+    });
+    s.importProgress(vacia);
+    expect(s.doneCount).toBe(0);
+    expect(s.xp).toBe(0);
+    expect(s.snippets).toEqual([]);
   });
 });

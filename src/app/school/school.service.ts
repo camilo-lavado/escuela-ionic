@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { ToastController } from '@ionic/angular';
 import { LESSONS } from './lessons';
+import { BACKUP_APP, BACKUP_VERSION, ProgressBackup } from './progress-backup';
 import { ExamAttempt, MemoryProgressRepository, ProgressRepository, Snapshot, Snippet } from './progress.repository';
 
 /** Clave del almacenamiento antiguo (localStorage); se importa a SQLite una sola vez. */
@@ -277,6 +278,65 @@ export class SchoolService {
     this.state.examRuns++;
     this.state.examBest = Math.max(this.state.examBest, percent);
     this.addXp(Math.round(percent / 5));
+  }
+
+  // ── copia de seguridad ──
+  /** Foto del progreso actual, lista para guardarla como JSON. */
+  exportProgress(): ProgressBackup {
+    const st = this.state;
+    return {
+      app: BACKUP_APP,
+      version: BACKUP_VERSION,
+      exportedAt: new Date().toISOString(),
+      done: [...st.done],
+      firstTry: [...st.firstTry],
+      fills: [...st.fills],
+      badges: [...st.badges],
+      xp: st.xp,
+      name: st.name,
+      streak: st.streak,
+      lastDay: st.lastDay,
+      playRuns: st.playRuns,
+      dark: st.dark,
+      examBest: st.examBest,
+      examRuns: st.examRuns,
+      snippets: st.snippets.map((s) => ({ ...s })),
+    };
+  }
+
+  /**
+   * Reemplaza el progreso actual por el de una copia ya validada con parseBackup().
+   * Los simulacros se guardan resumidos: queda un único intento «importado» con la mejor nota.
+   */
+  importProgress(b: ProgressBackup): void {
+    this.repo.reset();
+    for (const s of this.state.snippets) this.repo.deleteSnippet(s.name);
+    b.done.forEach((id) => this.repo.markLessonDone(id));
+    b.firstTry.forEach((k) => this.repo.markFirstTry(k));
+    b.fills.forEach((id) => this.repo.markFill(id));
+    b.badges.forEach((id) => this.repo.addBadge(id));
+    b.snippets.forEach((s) => this.repo.saveSnippet(s));
+    const set = (k: string, v: string | number) => this.repo.setSetting(k, String(v));
+    set('xp', b.xp);
+    set('name', b.name);
+    set('streak', b.streak);
+    if (b.lastDay) set('last_day', b.lastDay);
+    set('play_runs', b.playRuns);
+    if (b.dark !== null) set('dark', b.dark ? '1' : '0');
+    if (b.examRuns > 0) {
+      this.repo.addExam({ takenAt: new Date().toISOString(), scope: 'importado', total: 0, correct: 0, percent: b.examBest });
+    }
+    this.state = {
+      ...this.state,
+      done: b.done, firstTry: b.firstTry, fills: b.fills, badges: b.badges, snippets: b.snippets,
+      xp: b.xp, name: b.name, streak: b.streak, lastDay: b.lastDay || this.state.lastDay, playRuns: b.playRuns,
+      dark: b.dark ?? this.state.dark,
+      examBest: b.examRuns > 0 ? b.examBest : 0,
+      examRuns: b.examRuns > 0 ? 1 : 0,
+    };
+    if (b.dark !== null) this.applyDark(b.dark);
+    this.touchStreak();
+    this.commit();
   }
 
   // ── perfil ──
