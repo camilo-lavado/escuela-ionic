@@ -157,7 +157,14 @@ export class DemoCameraComponent implements OnDestroy {
       const foto = await Camera.takePhoto({ quality: this.calidad, targetWidth: this.anchoMax, targetHeight: alto });
       const url = foto.webPath ?? '';
       const kb = url ? (await (await fetch(url)).blob()).size / 1024 : 0;
-      this.fotos = [{ url, kb, ancho: this.anchoMax, alto, calidad: this.calidad }, ...this.fotos].slice(0, 6);
+      // el sistema puede devolver otro tamaño (orientación, límites del dispositivo): se muestra el real
+      const dim = await new Promise<{ w: number; h: number }>((ok) => {
+        const img = new Image();
+        img.onload = () => ok({ w: img.naturalWidth, h: img.naturalHeight });
+        img.onerror = () => ok({ w: this.anchoMax, h: alto });
+        img.src = url;
+      });
+      this.fotos = [{ url, kb, ancho: dim.w, alto: dim.h, calidad: this.calidad }, ...this.fotos].slice(0, 6);
     } catch (e) {
       const msg = (e as Error)?.message ?? '';
       // cancelar el selector del sistema no es un error que mostrar
