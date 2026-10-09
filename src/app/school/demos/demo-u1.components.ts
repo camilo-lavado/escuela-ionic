@@ -339,8 +339,8 @@ export class DemoCompareComponent {
   template: `
     <h3>1 · Contraste (WCAG)</h3>
     <div class="controls">
-      <label class="pick">Texto <input type="color" [(ngModel)]="fg" /> <code>{{ fg }}</code></label>
-      <label class="pick">Fondo <input type="color" [(ngModel)]="bg" /> <code>{{ bg }}</code></label>
+      <label class="pick">Texto <input type="color" [value]="fg" (input)="fg = $any($event.target).value" /> <code>{{ fg }}</code></label>
+      <label class="pick">Fondo <input type="color" [value]="bg" (input)="bg = $any($event.target).value" /> <code>{{ bg }}</code></label>
     </div>
     <div class="sample" [style.color]="fg" [style.background]="bg">
       <strong>Texto grande en negrita</strong><br />Texto normal de ejemplo para leer en el móvil.

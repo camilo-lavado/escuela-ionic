@@ -276,7 +276,7 @@
     <div class="controls">
       <label class="color-pick">
         Color
-        <input type="color" [(ngModel)]="themeColor" />
+        <input type="color" [value]="themeColor" (input)="themeColor = $any($event.target).value" />
         <code>{{ themeColor }}</code>
       </label>
       <ion-range [min]="0" [max]="30" [(ngModel)]="radius" label="Radio" labelPlacement="start" [pin]="true"></ion-range>
