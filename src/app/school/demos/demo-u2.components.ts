@@ -19,6 +19,9 @@ import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { Subject, concat, debounceTime, defer, delay, forkJoin, of, retry, tap, throwError, timer, timeout, catchError, finalize } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
+import { Camera } from '@capacitor/camera';
+import { Geolocation } from '@capacitor/geolocation';
 import { runTests, TestResult, haversineKm } from './mini-test';
 
 const SHARED_STYLES = [
@@ -65,6 +68,9 @@ interface Foto {
       <ion-button size="small" (click)="abrir()" [disabled]="activa"><ion-icon slot="start" name="camera"></ion-icon>Abrir cámara</ion-button>
       <ion-button size="small" color="success" (click)="capturar()" [disabled]="!activa"><ion-icon slot="start" name="radio-button-on"></ion-icon>Capturar</ion-button>
       <ion-button size="small" color="medium" (click)="cerrar()" [disabled]="!activa">Cerrar</ion-button>
+      @if (nativa) {
+        <ion-button size="small" color="tertiary" (click)="fotoNativa()"><ion-icon slot="start" name="camera"></ion-icon>Foto nativa (Capacitor)</ion-button>
+      }
     </div>
     @if (error) { <ion-card color="danger"><ion-card-content>{{ error }}</ion-card-content></ion-card> }
     <video #video autoplay playsinline muted [class.off]="!activa"></video>
@@ -99,6 +105,8 @@ export class DemoCameraComponent implements OnDestroy {
   error = '';
   info = '';
   fotos: Foto[] = [];
+  /** En la app móvil se ofrece además el plugin nativo @capacitor/camera. */
+  readonly nativa = Capacitor.isNativePlatform();
   private stream?: MediaStream;
   private cdr = inject(ChangeDetectorRef);
 
@@ -140,6 +148,22 @@ export class DemoCameraComponent implements OnDestroy {
     const url = c.toDataURL('image/jpeg', this.calidad / 100);
     const kb = ((url.length - 'data:image/jpeg;base64,'.length) * 0.75) / 1024;
     this.fotos = [{ url, kb, ancho: c.width, alto: c.height, calidad: this.calidad }, ...this.fotos].slice(0, 6);
+  }
+
+  async fotoNativa() {
+    this.error = '';
+    try {
+      const alto = Math.round((this.anchoMax * 3) / 4);
+      const foto = await Camera.takePhoto({ quality: this.calidad, targetWidth: this.anchoMax, targetHeight: alto });
+      const url = foto.webPath ?? '';
+      const kb = url ? (await (await fetch(url)).blob()).size / 1024 : 0;
+      this.fotos = [{ url, kb, ancho: this.anchoMax, alto, calidad: this.calidad }, ...this.fotos].slice(0, 6);
+    } catch (e) {
+      const msg = (e as Error)?.message ?? '';
+      // cancelar el selector del sistema no es un error que mostrar
+      if (!/cancel/i.test(msg)) this.error = 'No se pudo tomar la foto: ' + (msg || 'permiso denegado o cámara no disponible');
+    }
+    this.cdr.markForCheck();
   }
 
   cerrar() {
@@ -236,8 +260,10 @@ export class DemoGpsComponent implements OnDestroy {
     { n: 'Santiago de Chile', lat: -33.4489, lon: -70.6693 },
     { n: 'Buenos Aires', lat: -34.6037, lon: -58.3816 },
   ];
-  private watchId?: number;
+  private watchId?: number | string;
   private cdr = inject(ChangeDetectorRef);
+  /** En la app móvil se usa @capacitor/geolocation (pide el permiso de Android y respeta su estado). */
+  private readonly nativo = Capacitor.isNativePlatform();
 
   private opts(): PositionOptions {
     return { enableHighAccuracy: this.alta, timeout: this.timeoutS * 1000, maximumAge: 0 };
@@ -252,6 +278,12 @@ export class DemoGpsComponent implements OnDestroy {
 
   una() {
     this.error = '';
+    if (this.nativo) {
+      Geolocation.getCurrentPosition(this.opts())
+        .then((p) => this.registrar(p.coords.latitude, p.coords.longitude, p.coords.accuracy))
+        .catch((e) => this.falloNativo(e));
+      return;
+    }
     if (!navigator.geolocation) {
       this.error = 'Este dispositivo no soporta geolocalización. Ofrece introducir la dirección manualmente.';
       return;
@@ -265,11 +297,24 @@ export class DemoGpsComponent implements OnDestroy {
 
   seguir() {
     if (this.siguiendo && this.watchId !== undefined) {
-      navigator.geolocation.clearWatch(this.watchId);
+      this.detener();
       this.siguiendo = false;
       return;
     }
     this.error = '';
+    if (this.nativo) {
+      this.siguiendo = true;
+      Geolocation.watchPosition(this.opts(), (p, err) => {
+        if (err || !p) return this.falloNativo(err);
+        this.registrar(p.coords.latitude, p.coords.longitude, p.coords.accuracy);
+      })
+        .then((id) => (this.watchId = id))
+        .catch((e) => {
+          this.siguiendo = false;
+          this.falloNativo(e);
+        });
+      return;
+    }
     this.watchId = navigator.geolocation.watchPosition(
       (p) => this.registrar(p.coords.latitude, p.coords.longitude, p.coords.accuracy),
       (e) => this.fallo(e),
@@ -281,6 +326,24 @@ export class DemoGpsComponent implements OnDestroy {
   simular() {
     const c = this.ciudades[0];
     this.registrar(c.lat + (Math.random() - 0.5) * 0.002, c.lon + (Math.random() - 0.5) * 0.002, Math.round(3 + Math.random() * 250));
+  }
+
+  private detener() {
+    const id = this.watchId;
+    this.watchId = undefined;
+    if (id === undefined) return;
+    if (typeof id === 'string') void Geolocation.clearWatch({ id });
+    else navigator.geolocation.clearWatch(id);
+  }
+
+  private falloNativo(e: unknown) {
+    const msg = (e as { message?: string })?.message ?? '';
+    this.error = /denied|permission/i.test(msg)
+      ? 'PERMISSION_DENIED: el usuario denegó el permiso. Explica por qué lo necesitas y cómo activarlo en Ajustes.'
+      : /timeout|timed out/i.test(msg)
+        ? 'TIMEOUT: se agotó el tiempo de espera. Reintenta o baja la precisión.'
+        : 'No se pudo obtener la ubicación: ' + (msg || 'sin señal o ubicación desactivada.');
+    this.cdr.markForCheck();
   }
 
   private fallo(e: GeolocationPositionError) {
@@ -308,7 +371,7 @@ export class DemoGpsComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.watchId !== undefined) navigator.geolocation.clearWatch(this.watchId);
+    this.detener();
   }
 }
 
