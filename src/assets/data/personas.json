@@ -1,0 +1,122 @@
+[
+ {
+  "id": 1,
+  "nombre": "Ana Torres",
+  "ciudad": "Madrid",
+  "rol": "Diseñadora UX"
+ },
+ {
+  "id": 2,
+  "nombre": "Bruno Díaz",
+  "ciudad": "Ciudad de México",
+  "rol": "Desarrollador móvil"
+ },
+ {
+  "id": 3,
+  "nombre": "Carla Ruiz",
+  "ciudad": "Bogotá",
+  "rol": "Product Manager"
+ },
+ {
+  "id": 4,
+  "nombre": "Diego Salas",
+  "ciudad": "Buenos Aires",
+  "rol": "Backend"
+ },
+ {
+  "id": 5,
+  "nombre": "Elena Vega",
+  "ciudad": "Lima",
+  "rol": "QA"
+ },
+ {
+  "id": 6,
+  "nombre": "Fabián Mora",
+  "ciudad": "Santiago",
+  "rol": "DevOps"
+ },
+ {
+  "id": 7,
+  "nombre": "Gala Ibáñez",
+  "ciudad": "Barcelona",
+  "rol": "Frontend"
+ },
+ {
+  "id": 8,
+  "nombre": "Hugo Paz",
+  "ciudad": "Montevideo",
+  "rol": "Datos"
+ },
+ {
+  "id": 9,
+  "nombre": "Irene Solís",
+  "ciudad": "Quito",
+  "rol": "Marketing"
+ },
+ {
+  "id": 10,
+  "nombre": "Joel Cano",
+  "ciudad": "Valencia",
+  "rol": "Soporte"
+ },
+ {
+  "id": 11,
+  "nombre": "Karla Nieto",
+  "ciudad": "Guadalajara",
+  "rol": "Diseñadora UI"
+ },
+ {
+  "id": 12,
+  "nombre": "Luis Ortega",
+  "ciudad": "Medellín",
+  "rol": "Arquitecto"
+ },
+ {
+  "id": 13,
+  "nombre": "Marta Rey",
+  "ciudad": "Sevilla",
+  "rol": "Frontend"
+ },
+ {
+  "id": 14,
+  "nombre": "Nico Bravo",
+  "ciudad": "Córdoba",
+  "rol": "Móvil"
+ },
+ {
+  "id": 15,
+  "nombre": "Olga Pardo",
+  "ciudad": "Caracas",
+  "rol": "Seguridad"
+ },
+ {
+  "id": 16,
+  "nombre": "Pablo Lara",
+  "ciudad": "Zaragoza",
+  "rol": "Backend"
+ },
+ {
+  "id": 17,
+  "nombre": "Quela Soto",
+  "ciudad": "Panamá",
+  "rol": "Producto"
+ },
+ {
+  "id": 18,
+  "nombre": "Raúl Mena",
+  "ciudad": "Monterrey",
+  "rol": "QA"
+ },
+ {
+  "id": 19,
+  "nombre": "Sara Cruz",
+  "ciudad": "Bilbao",
+  "rol": "UX Research"
+ },
+ {
+  "id": 20,
+  "nombre": "Tomás Gil",
+  "ciudad": "Rosario",
+  "rol": "DevOps"
+ }
+]

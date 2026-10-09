@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Escuela Ionic</string>
+    <string name="title_activity_main">Escuela Ionic</string>
+    <string name="package_name">com.escuelaionic.app</string>
+    <string name="custom_url_scheme">com.escuelaionic.app</string>
+</resources>

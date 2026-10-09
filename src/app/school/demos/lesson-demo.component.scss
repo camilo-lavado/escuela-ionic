@@ -1,0 +1,140 @@
+:host {
+  display: block;
+}
+
+h3 {
+  margin: 18px 0 8px;
+  font-size: 1.05rem;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+h4 {
+  margin: 14px 0 6px;
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+}
+
+.controls {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.stage {
+  display: flex;
+  justify-content: center;
+  padding: 18px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  background: var(--ion-color-step-100, rgba(127, 127, 127, 0.1));
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.row {
+  display: block;
+  margin: 12px 0;
+}
+
+.out {
+  margin: 10px 0;
+}
+
+.add {
+  --background: transparent;
+  --padding-start: 0;
+}
+
+.reorder-toggle {
+  display: block;
+  margin: 4px 0 8px;
+}
+
+.tachado {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.code {
+  margin: 8px 0;
+  padding: 12px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: #14172b;
+  color: #e6e9ff;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.demo-grid {
+  padding: 0;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: var(--ion-color-step-100, rgba(127, 127, 127, 0.1));
+
+  &.tall .tall-row {
+    min-height: 120px;
+  }
+}
+
+.box {
+  padding: 12px 6px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+
+  &.a {
+    background: var(--ion-color-primary);
+  }
+
+  &.b {
+    background: var(--ion-color-secondary);
+  }
+
+  &.c {
+    background: var(--ion-color-tertiary);
+  }
+}
+
+.color-pick {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input {
+    width: 48px;
+    height: 32px;
+    border: 0;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+}
+
+.theme-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--ion-color-step-200, rgba(127, 127, 127, 0.3));
+}

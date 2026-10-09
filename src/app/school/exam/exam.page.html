@@ -1,0 +1,131 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>Simulacro</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wrap">
+    @switch (phase) {
+      @case ('setup') {
+        <h1><ion-icon name="reader"></ion-icon> Simulacro de evaluación</h1>
+        <p class="hint">
+          Preguntas de todas las lecciones, mezcladas, sin ayudas hasta el final. Elige el alcance
+          y mide tu nivel antes de la evaluación real. Mejor resultado: <strong>{{ school.examBest }} %</strong> ·
+          intentos: {{ school.examRuns }}.
+        </p>
+
+        <ion-card>
+          <ion-card-content>
+            <ion-select label="Alcance" interface="popover" [(ngModel)]="unit">
+              <ion-select-option value="all">Todo el programa</ion-select-option>
+              @for (u of units; track u.n) {
+                <ion-select-option [value]="u.n">{{ u.n === 4 ? 'Evaluación final' : 'Unidad ' + u.n }} · {{ u.title }}</ion-select-option>
+              }
+            </ion-select>
+            <ion-select label="Preguntas" interface="popover" [(ngModel)]="count">
+              <ion-select-option [value]="5">5</ion-select-option>
+              <ion-select-option [value]="10">10</ion-select-option>
+              <ion-select-option [value]="20">20</ion-select-option>
+              <ion-select-option [value]="40">40</ion-select-option>
+              <ion-select-option [value]="200">Todas</ion-select-option>
+            </ion-select>
+            <ion-toggle [(ngModel)]="timed" class="row">Con tiempo (45 s por pregunta)</ion-toggle>
+            <ion-range label="Exigencia %" labelPlacement="start" [min]="50" [max]="70" [step]="5" [pin]="true" [snaps]="true" [(ngModel)]="exigencia"></ion-range>
+            <p class="hint">Banco disponible para este alcance: {{ poolSize }} preguntas. La nota (1,0–7,0) usa la exigencia indicada; ajústala a tu reglamento.</p>
+            <ion-button expand="block" (click)="start()" [disabled]="poolSize === 0">Comenzar</ion-button>
+          </ion-card-content>
+        </ion-card>
+      }
+
+      @case ('running') {
+        <div class="top">
+          <span>Pregunta {{ index + 1 }} / {{ questions.length }} · respondidas {{ answered }}</span>
+          @if (timed) { <strong [class.low]="secondsLeft < 30"><ion-icon name="time"></ion-icon> {{ mmss }}</strong> }
+        </div>
+        <ion-progress-bar [value]="(index + 1) / questions.length"></ion-progress-bar>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle>{{ current.lessonTitle }}</ion-card-subtitle>
+            <ion-card-title class="q">{{ current.q }}</ion-card-title>
+          </ion-card-header>
+          <ion-list lines="none">
+            @for (o of current.options; track $index; let i = $index) {
+              <ion-item button detail="false" [color]="answers[index] === i ? 'primary' : undefined" (click)="choose(i)">
+                <ion-label class="ion-text-wrap"><strong>{{ letter(i) }}.</strong> {{ o }}</ion-label>
+              </ion-item>
+            }
+          </ion-list>
+        </ion-card>
+
+        <div class="nav">
+          <ion-button fill="outline" (click)="prev()" [disabled]="index === 0">← Anterior</ion-button>
+          @if (index < questions.length - 1) {
+            <ion-button (click)="next()">Siguiente →</ion-button>
+          } @else {
+            <ion-button color="success" (click)="finish()">Terminar</ion-button>
+          }
+        </div>
+        <div class="dots">
+          @for (a of answers; track $index; let i = $index) {
+            <button type="button" [class.on]="i === index" [class.done]="a >= 0" (click)="index = i">{{ i + 1 }}</button>
+          }
+        </div>
+      }
+
+      @case ('done') {
+        <ion-card [color]="grade >= 4 ? 'success' : 'danger'">
+          <ion-card-header>
+            <ion-card-subtitle>Resultado</ion-card-subtitle>
+            <ion-card-title>{{ correct }} / {{ questions.length }} correctas · {{ percent }} %</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Nota estimada: <strong>{{ grade | number: '1.1-1' }}</strong> (exigencia {{ exigencia }} %).
+            {{ percent >= 85 ? '¡Excelente! Estás listo para la evaluación.' : percent >= 60 ? 'Vas bien; repasa los puntos débiles.' : 'Necesitas repasar. Empieza por las lecciones sugeridas.' }}
+          </ion-card-content>
+        </ion-card>
+
+        @if (weak.length) {
+          <h3>Repasa estas lecciones</h3>
+          <ion-list>
+            @for (w of weak; track w.id) {
+              <ion-item button [routerLink]="['/leccion', w.id]" routerDirection="forward">
+                <ion-label class="ion-text-wrap">{{ w.title }}</ion-label>
+                <ion-note slot="end" color="danger">{{ w.wrong }} fallo(s)</ion-note>
+              </ion-item>
+            }
+          </ion-list>
+        }
+
+        <h3>Revisión</h3>
+        @for (q of questions; track $index; let i = $index) {
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle>{{ i + 1 }}. {{ q.lessonTitle }}</ion-card-subtitle>
+              <ion-card-title class="q">{{ q.q }}</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>
+                Tu respuesta:
+                <strong [class.ok]="answers[i] === q.answer" [class.bad]="answers[i] !== q.answer">
+                  {{ answers[i] >= 0 ? letter(answers[i]) + '. ' + q.options[answers[i]] : '(sin responder)' }}
+                </strong>
+              </p>
+              @if (answers[i] !== q.answer) {
+                <p>Correcta: <strong class="ok">{{ letter(q.answer) }}. {{ q.options[q.answer] }}</strong></p>
+              }
+              <p class="hint"><ion-icon name="bulb"></ion-icon> {{ q.why }}</p>
+            </ion-card-content>
+          </ion-card>
+        }
+
+        <ion-button expand="block" (click)="restart()">Hacer otro simulacro</ion-button>
+      }
+    }
+  </div>
+</ion-content>

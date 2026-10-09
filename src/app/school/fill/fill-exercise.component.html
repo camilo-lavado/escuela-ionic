@@ -1,0 +1,20 @@
+<pre class="code"><code>@for (p of parts; track $index; let i = $index) {<span>{{ p }}</span>@if (i < values.length) {<button type="button" class="slot" [class.filled]="values[i]" [ngClass]="state(i)" (click)="clear(i)">{{ values[i] || '   ' }}</button>}}</code></pre>
+
+<div class="bank">
+  @for (o of fill.options; track o) {
+    <ion-chip color="primary" (click)="put(o)">{{ o }}</ion-chip>
+  }
+</div>
+
+<div class="actions">
+  <ion-button size="small" [disabled]="!filledAll" (click)="check()">Comprobar</ion-button>
+  <ion-button size="small" fill="clear" (click)="reset()">Limpiar</ion-button>
+</div>
+
+@if (checked) {
+  <p class="msg" [class.ok]="ok">
+    <ion-icon [name]="ok ? 'checkmark-circle' : 'close-circle'"></ion-icon> {{ ok ? '¡Perfecto! El código es correcto.' : 'Hay huecos incorrectos (en rojo). Toca uno para vaciarlo.' }}
+  </p>
+} @else if (solved) {
+  <p class="msg ok"><ion-icon name="checkmark-circle"></ion-icon> Ejercicio ya resuelto. Puedes repetirlo cuando quieras.</p>
+}

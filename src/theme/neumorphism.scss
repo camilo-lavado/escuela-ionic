@@ -1,0 +1,469 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Neumorphism / Soft UI — estilos de componentes
+   Reglas: una sola luz (arriba-izquierda) · misma tonalidad fondo/superficie ·
+   sombras tensas (≤ 6 px) y difusas (14 px) · relieve «hundido» solo para
+   selecciones activas · afordance extra (color/icono/etiqueta) siempre.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html,
+body {
+  background: var(--n-bg);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.015em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+pre,
+code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* ── Barra superior: plana, del mismo tono que el fondo ── */
+ion-header {
+  box-shadow: none;
+
+  &::after {
+    display: none;
+  }
+}
+
+ion-toolbar {
+  --background: var(--n-bg);
+  --color: var(--ion-text-color);
+  --border-width: 0;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+}
+
+ion-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Botones redondos de la barra: relieve + color de acento (afordance) */
+ion-buttons ion-button,
+ion-back-button,
+ion-menu-button {
+  --background: var(--n-bg);
+  --color: var(--ion-color-primary);
+  --color-hover: var(--ion-color-primary);
+  --border-radius: 50%;
+  --box-shadow: var(--n-raised-sm);
+  --padding-start: 10px;
+  --padding-end: 10px;
+  margin: 0 6px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+ion-back-button {
+  --border-radius: var(--radius);
+}
+
+ion-buttons ion-button.ion-activated,
+ion-back-button.ion-activated,
+ion-menu-button.ion-activated {
+  --box-shadow: var(--n-inset-sm);
+}
+
+/* Modo claro: barra superior de color (ultramar) con botones elevados translúcidos */
+:root:not(.ion-palette-dark) {
+  ion-header ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: #ffffff;
+    --ion-text-color: #ffffff;
+  }
+
+  ion-header ion-title {
+    color: #ffffff;
+  }
+
+  ion-header ion-buttons ion-button,
+  ion-header ion-back-button,
+  ion-header ion-menu-button {
+    --background: rgba(255, 255, 255, 0.16);
+    --color: #ffffff;
+    --color-hover: #ffffff;
+    --box-shadow: -3px -3px 8px rgba(255, 255, 255, 0.14), 4px 4px 9px rgba(8, 18, 92, 0.38);
+  }
+
+  ion-header ion-buttons ion-button.ion-activated,
+  ion-header ion-back-button.ion-activated,
+  ion-header ion-menu-button.ion-activated {
+    --box-shadow: inset 3px 3px 6px rgba(8, 18, 92, 0.42), inset -3px -3px 6px rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ── Botones ── */
+ion-button {
+  --border-radius: var(--radius);
+  --box-shadow: none;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: box-shadow 150ms ease-out;
+}
+
+/* sólido sin color: superficie elevada + texto de acento */
+ion-button:not([color]):not([fill='clear']):not([fill='outline']):not([disabled]) {
+  --background: var(--n-bg);
+  --background-hover: var(--n-bg);
+  --background-activated: var(--n-bg);
+  --color: var(--ion-color-primary);
+  --box-shadow: var(--n-raised-sm);
+}
+
+/* sólido con color: relleno de color + el mismo relieve */
+ion-button[color]:not([fill='clear']):not([fill='outline']):not([disabled]) {
+  --box-shadow: var(--n-raised-sm);
+}
+
+ion-button[fill='outline'] {
+  --border-width: 1.5px;
+  --border-color: var(--ion-color-step-300);
+}
+
+ion-button.ion-activated:not([fill='clear']):not([disabled]) {
+  --box-shadow: var(--n-inset-sm);
+}
+
+ion-button[disabled] {
+  opacity: 0.55;
+}
+
+/* ── Tarjetas ── */
+ion-card {
+  --background: var(--n-bg);
+  --color: var(--ion-text-color);
+  color: var(--ion-text-color);
+  margin: calc(var(--space) * 1.75) calc(var(--space) * 1.25);
+  border: 1px solid var(--n-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--n-raised);
+  contain: none;
+  overflow: visible;
+}
+
+ion-card[color] {
+  border-color: transparent;
+  color: var(--ion-color-contrast);
+  --color: var(--ion-color-contrast);
+}
+
+ion-card-subtitle {
+  color: var(--n-muted);
+}
+
+ion-note,
+ion-item p,
+ion-label.hydrated > p {
+  color: var(--n-muted);
+}
+
+/* las tarjetas clicables llevan un botón interno: hereda el radio de la tarjeta */
+ion-card::part(native) {
+  border-radius: inherit;
+}
+
+ion-card-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+ion-card-header {
+  padding-bottom: 4px;
+}
+
+/* ── Campos de texto: hundidos (como un hueco en la superficie) ── */
+ion-input,
+ion-textarea,
+ion-select {
+  --background: var(--n-bg);
+  --border-color: transparent;
+  --border-radius: var(--radius);
+  --highlight-color-focused: var(--ion-color-primary);
+  --padding-start: 14px;
+  --padding-end: 14px;
+  min-height: 48px;
+  border-radius: var(--radius);
+  box-shadow: var(--n-inset-sm);
+}
+
+ion-textarea {
+  min-height: 72px;
+}
+
+/* resultados de las demos (saludos, mensajes): bloque hundido de solo lectura */
+ion-card.out[color] {
+  --background: var(--n-bg);
+  background: var(--n-bg);
+  color: var(--ion-text-color);
+  --color: var(--ion-text-color);
+  border: 0;
+  box-shadow: var(--n-inset);
+}
+
+ion-input,
+ion-textarea,
+ion-select {
+  --highlight-color-focused: var(--ion-color-primary);
+}
+
+/* ── Chips: pastillas elevadas con color propio ── */
+ion-chip {
+  --background: var(--n-bg);
+  border: 1px solid var(--n-edge);
+  box-shadow: var(--n-raised-sm);
+  font-weight: 700;
+}
+
+/* texto de las etiquetas de color: variantes más oscuras (claro) o más claras (oscuro) */
+:root:not(.ion-palette-dark) {
+  ion-chip[color='success'] { color: #0f6a40; }
+  ion-chip[color='tertiary'] { color: #0a6560; }
+  ion-chip[color='primary'] { color: #2a3cc0; }
+  ion-chip[color='secondary'] { color: #a8341b; }
+  ion-chip[color='warning'] { color: #6b4a00; }
+  ion-chip[color='danger'] { color: #a8233c; }
+  ion-chip[color='medium'] { color: #55483a; }
+}
+
+:root.ion-palette-dark {
+  ion-chip[color='success'] { color: var(--ion-color-success-tint); }
+  ion-chip[color='tertiary'] { color: var(--ion-color-tertiary-tint); }
+  ion-chip[color='primary'] { color: var(--ion-color-primary-tint); }
+  ion-chip[color='secondary'] { color: var(--ion-color-secondary-tint); }
+  ion-chip[color='danger'] { color: var(--ion-color-danger-tint); }
+  ion-chip[color='medium'] { color: var(--ion-color-medium-tint); }
+}
+
+ion-chip[outline='true'] {
+  --background: transparent;
+  border-color: var(--ion-color-step-300);
+  box-shadow: none;
+}
+
+/* ── Segmentos: pozo hundido; la opción activa sobresale con acento ── */
+ion-segment {
+  --background: var(--n-bg);
+  padding: 5px;
+  border-radius: var(--radius);
+  box-shadow: var(--n-inset);
+}
+
+ion-segment-button {
+  --border-radius: calc(var(--radius) - 4px);
+  --color: var(--ion-color-medium);
+  --color-checked: var(--ion-color-primary);
+  --indicator-color: transparent;
+  --indicator-box-shadow: none;
+  --background-checked: var(--n-bg);
+  font-weight: 700;
+  text-transform: none;
+  min-height: 40px;
+}
+
+ion-segment-button::part(indicator-background) {
+  background: var(--n-bg);
+  border-radius: calc(var(--radius) - 4px);
+  box-shadow: var(--n-raised-sm);
+}
+
+/* ── Barra de pestañas: plana y legible (navegación principal) ── */
+ion-tab-bar {
+  --border: 0;
+  --background: var(--n-bg);
+  border-top: 1px solid var(--n-edge);
+  box-shadow: 0 -6px 14px rgba(120, 138, 170, 0.18);
+  padding-top: 2px;
+}
+
+ion-tab-button {
+  --color: var(--ion-color-medium);
+  --color-selected: var(--ion-color-primary);
+  font-weight: 700;
+
+  &.tab-selected {
+    box-shadow: inset 0 3px 0 var(--ion-color-primary);
+  }
+}
+
+/* ── Menú lateral ── */
+ion-menu {
+  --background: var(--n-bg);
+
+  ion-content {
+    --background: var(--n-bg);
+  }
+}
+
+/* ── Listas ── */
+ion-list {
+  background: transparent;
+}
+
+ion-item {
+  --border-color: var(--ion-color-step-150);
+  --background: transparent;
+}
+
+/* ── Acordeones: bloque elevado con separadores ── */
+ion-accordion-group {
+  border-radius: var(--radius);
+  box-shadow: var(--n-raised);
+  overflow: hidden;
+  border: 1px solid var(--n-edge);
+}
+
+ion-accordion {
+  background: var(--n-bg);
+}
+
+ion-accordion.accordion-expanded > ion-item[slot='header'] {
+  --color: var(--ion-color-primary);
+}
+
+/* ── Progreso: surco hundido con relleno de acento ── */
+ion-progress-bar {
+  --background: var(--ion-color-step-200);
+  --progress-background: var(--ion-color-primary);
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+ion-skeleton-text {
+  --background-rgb: 110, 122, 150;
+}
+
+/* ── Controles de selección con acento ── */
+ion-toggle,
+ion-checkbox,
+ion-radio,
+ion-range {
+  --ion-color-primary: var(--ion-color-primary);
+}
+
+/* ── Utilidades del sistema ── */
+.raised {
+  background: var(--n-bg);
+  border: 1px solid var(--n-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--n-raised);
+}
+
+.raised-sm {
+  background: var(--n-bg);
+  border: 1px solid var(--n-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--n-raised-sm);
+}
+
+.well {
+  background: var(--n-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--n-inset);
+}
+
+/* Identidad por unidad: --uc cambia el color de iconos, números y barras */
+[data-unit='1'] { --uc: var(--u1); --uc-text: var(--u1t); }
+[data-unit='2'] { --uc: var(--u2); --uc-text: var(--u2t); }
+[data-unit='3'] { --uc: var(--u3); --uc-text: var(--u3t); }
+[data-unit='4'] { --uc: var(--u4); --uc-text: var(--u4t); }
+
+/* Franja de cuatro colores (leyenda de las unidades) */
+.unit-strip {
+  display: flex;
+  gap: 6px;
+  margin-bottom: calc(var(--space) * 2.5);
+
+  span {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--uc);
+    box-shadow: var(--n-raised-sm);
+    opacity: 0.95;
+  }
+}
+
+/* Icono en «pozo» circular: icono de acento (afordance sin depender de la sombra) */
+.icon-tile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--n-bg);
+  box-shadow: var(--n-inset-sm);
+  color: var(--ion-color-primary);
+  font-size: 1.45rem;
+  font-weight: 800;
+
+  &.done {
+    color: var(--ion-color-success);
+  }
+
+  /* variante rellena con el color de la unidad: más personalidad, sigue elevada */
+  &.filled {
+    background: var(--uc, var(--ion-color-primary));
+    color: var(--u-contrast, #ffffff);
+    box-shadow: var(--n-raised-sm);
+  }
+}
+
+/* Entrada: fundido + deslizamiento (16 px → 0, 420 ms), 80 ms entre elementos */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  animation: rise-in 420ms ease-out both;
+  animation-delay: min(calc(var(--i, 0) * 80ms), 640ms);
+}
+
+/* Tarjetas pulsables: sobresalen más al pasar el cursor y se hunden al pulsar */
+.lift {
+  transition: box-shadow 200ms ease-out;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: -8px -8px 18px var(--n-light), 8px 8px 18px var(--n-dark);
+  }
+
+  &:active {
+    box-shadow: var(--n-inset);
+  }
+}
+
+/* Foco visible con anillo de acento (teclado) */
+:focus-visible {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+/* Respeta la preferencia «reducir movimiento» */
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none !important;
+  }
+
+  ion-button,
+  .lift {
+    transition: none !important;
+  }
+}

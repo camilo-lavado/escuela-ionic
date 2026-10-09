@@ -1,0 +1,159 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Escuela Ionic</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <section class="hero raised">
+    <div class="hero-inner">
+      <div class="unit-strip" aria-hidden="true">
+        @for (n of [1, 2, 3, 4]; track n) { <span [attr.data-unit]="n"></span> }
+      </div>
+      <span class="eyebrow">Desarrollo de Aplicaciones Móviles</span>
+      <h1>Aprende Ionic haciendo</h1>
+      <p class="lead">
+        {{ lessons.length }} lecciones alineadas con las unidades del programa: teoría detallada, demos en vivo,
+        ejercicios de código, quiz y simulacro de evaluación.
+      </p>
+
+      <div class="stats">
+        <div class="stat">
+          <ion-icon name="rocket"></ion-icon>
+          <strong>Nivel {{ school.level }}</strong>
+          <span>{{ school.levelName }}</span>
+        </div>
+        <div class="stat">
+          <ion-icon name="trending-up"></ion-icon>
+          <strong>{{ school.xp }} XP</strong>
+          <span>{{ school.xpToNext }} para subir</span>
+        </div>
+        <div class="stat">
+          <ion-icon name="flame"></ion-icon>
+          <strong>{{ school.streak }} {{ school.streak === 1 ? 'día' : 'días' }}</strong>
+          <span>de racha</span>
+        </div>
+      </div>
+      <ion-progress-bar [value]="school.levelProgress" aria-label="Progreso hacia el siguiente nivel"></ion-progress-bar>
+
+      <div class="overall">
+        <svg class="ring" viewBox="0 0 100 100" role="img" [attr.aria-label]="mastery + ' % de dominio estimado'">
+          <circle class="track" cx="50" cy="50" r="42"></circle>
+          @if (mastery > 0) {
+            <circle class="bar" cx="50" cy="50" r="42" [attr.stroke-dasharray]="ringDash"></circle>
+          }
+          <text x="50" y="57" text-anchor="middle">{{ mastery }}%</text>
+        </svg>
+        <div class="txt">
+          <strong>Dominio estimado</strong>
+          <span>{{ school.doneCount }} de {{ school.total }} lecciones completadas</span>
+          <ion-progress-bar [value]="school.progress" aria-label="Lecciones completadas"></ion-progress-bar>
+        </div>
+      </div>
+
+      @if (!allDone) {
+        <ion-button class="cta" color="primary" [routerLink]="['/leccion', next.id]" routerDirection="forward" shape="round" size="large">
+          {{ school.doneCount === 0 ? 'Empezar' : 'Continuar' }}
+          <ion-icon slot="end" name="chevron-forward"></ion-icon>
+        </ion-button>
+        <p class="next">Siguiente: {{ next.title }}</p>
+      }
+    </div>
+  </section>
+
+  @if (allDone) {
+    <ion-card color="success" class="diploma rise" routerLink="/perfil" routerDirection="forward" button>
+      <ion-card-header>
+        <ion-card-title>¡Completaste la escuela!</ion-card-title>
+        <ion-card-subtitle>Toca para ver tu diploma</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  }
+
+  <div class="filters">
+    <ion-searchbar
+      placeholder="Buscar lección…"
+      [debounce]="150"
+      [(ngModel)]="query"
+      aria-label="Buscar lección"
+    ></ion-searchbar>
+    <ion-segment [(ngModel)]="level" [scrollable]="true">
+      @for (lv of levels; track lv) {
+        <ion-segment-button [value]="lv"><ion-label>{{ lv }}</ion-label></ion-segment-button>
+      }
+    </ion-segment>
+  </div>
+
+  <div class="units">
+    @for (x of units; track x.u.n) {
+      <section class="unit" [attr.data-unit]="x.u.n">
+        <header class="unit-head" (click)="toggleUnit(x.u.n)" (keydown.enter)="toggleUnit(x.u.n)" tabindex="0" role="button" [attr.aria-expanded]="openUnit === x.u.n">
+          <div class="icon-tile filled"><ion-icon [name]="x.u.icon"></ion-icon></div>
+          <div class="info">
+            <span class="kicker">{{ x.u.n === 4 ? 'Evaluación final' : 'Unidad ' + x.u.n }} · {{ x.u.weight }} % de la nota</span>
+            <h2>{{ x.u.title }}</h2>
+            <ion-progress-bar [value]="x.progress"></ion-progress-bar>
+            <span class="sub">{{ x.done }}/{{ x.all }} lecciones · toca para ver el temario oficial</span>
+          </div>
+        </header>
+
+        @if (openUnit === x.u.n) {
+          <div class="syllabus rise">
+            <h4>Contenidos del programa</h4>
+            <ul>
+              @for (c of x.u.contents; track c) { <li>{{ c }}</li> }
+            </ul>
+            @if (x.indicators.length) {
+              <h4>Indicadores de logro</h4>
+              <ul class="ind">
+                @for (i of x.indicators; track i.id) {
+                  <li [class.ok]="i.ok">
+                    <ion-icon [name]="i.ok ? 'checkmark-circle' : 'ellipse-outline'" [color]="i.ok ? 'success' : 'medium'"></ion-icon>
+                    <span><strong>{{ i.id }}</strong> {{ i.text }} <em>({{ i.done }}/{{ i.total }} lecciones)</em></span>
+                  </li>
+                }
+              </ul>
+            }
+            <p class="sub">Evidencia: {{ x.u.evidence }}</p>
+          </div>
+        }
+
+        @for (item of x.shown; track item.l.id; let i = $index) {
+          <ion-card class="lesson-card lift rise" [style.--i]="i" button [routerLink]="['/leccion', item.l.id]" routerDirection="forward">
+            <div class="lesson-row">
+              <div class="icon-tile" [class.done]="school.isDone(item.l.id)">
+                @if (school.isDone(item.l.id)) { <ion-icon name="checkmark"></ion-icon> } @else { {{ item.n }} }
+              </div>
+              <div class="lesson-body">
+                <div class="meta">
+                  <ion-chip [color]="levelColor(item.l.level)">{{ item.l.level }}</ion-chip>
+                  <ion-note>{{ item.l.minutes }} min</ion-note>
+                  @for (id of item.l.indicators; track id) { <ion-chip outline="true" color="medium">{{ id }}</ion-chip> }
+                </div>
+                <h3>{{ item.l.title }}</h3>
+                <p>{{ item.l.summary }}</p>
+              </div>
+            </div>
+          </ion-card>
+        } @empty {
+          <p class="hint ion-padding-horizontal">Sin lecciones con este filtro en la unidad.</p>
+        }
+      </section>
+    }
+    @if (shownCount === 0) {
+      <p class="ion-text-center hint">Ninguna lección coincide con tu búsqueda.</p>
+    }
+  </div>
+
+  <div class="ion-text-center ion-padding">
+    <ion-button fill="clear" color="medium" size="small" (click)="reset()">
+      Reiniciar progreso
+    </ion-button>
+  </div>
+</ion-content>

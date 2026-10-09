@@ -1,0 +1,80 @@
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px 12px 40px;
+}
+
+h1 {
+  margin: 8px 4px;
+  font-size: 1.6rem;
+}
+
+h3 {
+  margin: 20px 4px 8px;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+  line-height: 1.5;
+}
+
+.row {
+  display: block;
+  margin: 14px 0;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 4px 8px;
+  font-size: 0.9rem;
+
+  .low {
+    color: var(--ion-color-danger);
+  }
+}
+
+.q {
+  font-size: 1.05rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+
+  button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--ion-color-medium);
+    background: transparent;
+    color: var(--ion-text-color);
+    cursor: pointer;
+
+    &.done {
+      background: var(--ion-color-primary);
+      color: var(--ion-color-primary-contrast);
+      border-color: var(--ion-color-primary);
+    }
+
+    &.on {
+      outline: 2px solid var(--ion-color-warning);
+    }
+  }
+}
+
+.ok {
+  color: var(--ion-color-success);
+}
+
+.bad {
+  color: var(--ion-color-danger);
+}

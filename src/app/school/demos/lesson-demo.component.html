@@ -1,0 +1,494 @@
+@switch (lessonId) {
+  <!-- ───────────── 1. INTRO ───────────── -->
+  @case ('intro') {
+    <h3>Enlace de datos en vivo</h3>
+    <ion-input
+      label="Tu nombre"
+      labelPlacement="floating"
+      fill="outline"
+      [(ngModel)]="nombre"
+    ></ion-input>
+    <ion-card color="light" class="out">
+      <ion-card-content>
+        <strong>Hola, {{ nombre || 'desconocido' }}</strong>
+      </ion-card-content>
+    </ion-card>
+    <ion-button (click)="veces = veces + 1">Pulsado {{ veces }} veces</ion-button>
+    <ion-button fill="clear" (click)="veces = 0">Reiniciar</ion-button>
+
+    <h3>Mismo código, dos estilos</h3>
+    <p class="hint">
+      Modo actual: <strong>{{ currentMode === 'ios' ? 'iOS' : 'Material Design' }}</strong>. Recarga
+      la página en el otro modo para comparar.
+    </p>
+    <ion-button size="small" [fill]="currentMode === 'ios' ? 'solid' : 'outline'" (click)="setMode('ios')">
+      iOS
+    </ion-button>
+    <ion-button size="small" [fill]="currentMode === 'md' ? 'solid' : 'outline'" (click)="setMode('md')">
+      Material
+    </ion-button>
+  }
+
+  <!-- ───────────── 2. COMPONENTES ───────────── -->
+  @case ('componentes') {
+    <h3>Laboratorio de botones</h3>
+    <div class="controls">
+      <ion-select label="color" interface="popover" [(ngModel)]="btn['color']">
+        @for (c of colors; track c) {
+          <ion-select-option [value]="c">{{ c }}</ion-select-option>
+        }
+      </ion-select>
+      <ion-select label="fill" interface="popover" [(ngModel)]="btn['fill']">
+        <ion-select-option value="solid">solid</ion-select-option>
+        <ion-select-option value="outline">outline</ion-select-option>
+        <ion-select-option value="clear">clear</ion-select-option>
+      </ion-select>
+      <ion-select label="size" interface="popover" [(ngModel)]="btn['size']">
+        <ion-select-option value="small">small</ion-select-option>
+        <ion-select-option value="default">default</ion-select-option>
+        <ion-select-option value="large">large</ion-select-option>
+      </ion-select>
+      <ion-select label="shape" interface="popover" [(ngModel)]="btn['shape']">
+        <ion-select-option value="default">default</ion-select-option>
+        <ion-select-option value="round">round</ion-select-option>
+      </ion-select>
+      <ion-select label="expand" interface="popover" [(ngModel)]="btn['expand']">
+        <ion-select-option value="">(ninguno)</ion-select-option>
+        <ion-select-option value="block">block</ion-select-option>
+        <ion-select-option value="full">full</ion-select-option>
+      </ion-select>
+      <ion-toggle [(ngModel)]="btn['disabled']">disabled</ion-toggle>
+    </div>
+
+    <div class="stage">
+      <ion-button
+        [color]="btn['color']"
+        [fill]="btn['fill']"
+        [size]="btn['size']"
+        [shape]="btn['shape']"
+        [expand]="btn['expand'] || undefined"
+        [disabled]="btn['disabled']"
+      >
+        Mi botón
+      </ion-button>
+    </div>
+    <pre class="code"><code>{{ btnCode }}</code></pre>
+  }
+
+  <!-- ───────────── 3. LISTAS ───────────── -->
+  @case ('listas') {
+    <h3>Lista de tareas ({{ pendientes }} pendientes)</h3>
+    <ion-item lines="none" class="add">
+      <ion-input
+        placeholder="Nueva tarea…"
+        [(ngModel)]="nuevaTarea"
+        (keyup.enter)="addTodo()"
+      ></ion-input>
+      <ion-button slot="end" size="small" (click)="addTodo()">Añadir</ion-button>
+    </ion-item>
+    <ion-toggle [(ngModel)]="reorder" class="reorder-toggle">Modo reordenar</ion-toggle>
+
+    <ion-list>
+      <ion-reorder-group [disabled]="!reorder" (ionReorderEnd)="onReorder($any($event))">
+        @for (t of todos; track t.id) {
+          <ion-item-sliding>
+            <ion-item>
+              <ion-checkbox slot="start" [(ngModel)]="t.done"></ion-checkbox>
+              <ion-label [class.tachado]="t.done">{{ t.text }}</ion-label>
+              <ion-reorder slot="end"></ion-reorder>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="removeTodo(t)">Borrar</ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        }
+      </ion-reorder-group>
+    </ion-list>
+    @if (todos.length === 0) {
+      <p class="hint">No quedan tareas</p>
+    }
+    <p class="hint">Desliza una fila hacia la izquierda para borrarla.</p>
+  }
+
+  <!-- ───────────── 4. FORMULARIOS ───────────── -->
+  @case ('formularios') {
+    <h3>Formulario de registro</h3>
+    <ion-input
+      label="Correo"
+      labelPlacement="floating"
+      fill="outline"
+      type="email"
+      [(ngModel)]="form.email"
+      [class.ion-invalid]="emailInvalid && form.email.length > 0"
+      [class.ion-touched]="form.email.length > 0"
+      errorText="Escribe un correo válido"
+    ></ion-input>
+
+    <ion-toggle [(ngModel)]="form.avisos" class="row">Recibir avisos</ion-toggle>
+
+    <ion-range [min]="0" [max]="100" [pin]="true" [(ngModel)]="form.volumen" label="Volumen" labelPlacement="start"></ion-range>
+
+    <ion-select label="País" interface="popover" [(ngModel)]="form.pais">
+      <ion-select-option value="mx">México</ion-select-option>
+      <ion-select-option value="es">España</ion-select-option>
+      <ion-select-option value="co">Colombia</ion-select-option>
+      <ion-select-option value="ar">Argentina</ion-select-option>
+    </ion-select>
+
+    <ion-radio-group [(ngModel)]="form.nivel">
+      <ion-radio value="basico" labelPlacement="end">Básico</ion-radio><br />
+      <ion-radio value="pro" labelPlacement="end">Pro</ion-radio>
+    </ion-radio-group>
+
+    <ion-checkbox [(ngModel)]="form.terminos" class="row">Acepto los términos</ion-checkbox>
+
+    <ion-button expand="block" [disabled]="emailInvalid || !form.terminos" (click)="sendForm()">
+      Enviar
+    </ion-button>
+
+    <h4>Modelo en vivo</h4>
+    <pre class="code"><code>{{ formJson }}</code></pre>
+  }
+
+  <!-- ───────────── 5. OVERLAYS ───────────── -->
+  @case ('overlays') {
+    <h3>Abre cada overlay</h3>
+    <div class="btn-row">
+      <ion-button size="small" (click)="showAlert()">Alert con input</ion-button>
+      <ion-button size="small" color="success" (click)="showToast('top')">Toast arriba</ion-button>
+      <ion-button size="small" color="success" (click)="showToast('bottom')">Toast abajo</ion-button>
+      <ion-button size="small" color="tertiary" (click)="showSheet()">Action sheet</ion-button>
+      <ion-button size="small" color="warning" (click)="showLoading()">Loading</ion-button>
+      <ion-button size="small" color="secondary" (click)="modalOpen = true">Modal</ion-button>
+      <ion-button size="small" color="dark" (click)="sheetOpen = true">Modal tipo hoja</ion-button>
+    </div>
+
+    <h4>Registro de eventos</h4>
+    <pre class="code"><code>{{ log.length ? log.join('\n') : '(vacío — abre algún overlay)' }}</code></pre>
+
+    <ion-modal [isOpen]="modalOpen" (didDismiss)="modalOpen = false">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Modal</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="modalOpen = false">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          Este es un modal a pantalla completa. Cualquier contenido de Ionic puede vivir aquí.
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+    <ion-modal
+      [isOpen]="sheetOpen"
+      [initialBreakpoint]="0.4"
+      [breakpoints]="[0, 0.4, 0.9]"
+      (didDismiss)="sheetOpen = false"
+    >
+      <ng-template>
+        <ion-content class="ion-padding">
+          <h2>Hoja deslizable</h2>
+          <p>Arrástrame hacia arriba para expandirme o hacia abajo para cerrarme.</p>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  }
+
+  <!-- ───────────── 6. LAYOUT ───────────── -->
+  @case ('layout') {
+    <h3>Reparto de columnas</h3>
+    <ion-range [min]="1" [max]="11" [pin]="true" [snaps]="true" [(ngModel)]="colA" label="Columna A" labelPlacement="start"></ion-range>
+    <ion-grid class="demo-grid">
+      <ion-row>
+        <ion-col [size]="colA"><div class="box a">A · {{ colA }}</div></ion-col>
+        <ion-col [size]="colB"><div class="box b">B · {{ colB }}</div></ion-col>
+      </ion-row>
+    </ion-grid>
+    <pre class="code"><code>&lt;ion-col size="{{ colA }}"&gt;A&lt;/ion-col&gt;
+&lt;ion-col size="{{ colB }}"&gt;B&lt;/ion-col&gt;</code></pre>
+
+    <h3>Alineación con utilidades</h3>
+    <div class="controls">
+      <ion-select label="justify" interface="popover" [(ngModel)]="justify">
+        <ion-select-option value="start">start</ion-select-option>
+        <ion-select-option value="center">center</ion-select-option>
+        <ion-select-option value="end">end</ion-select-option>
+        <ion-select-option value="between">between</ion-select-option>
+      </ion-select>
+      <ion-select label="align" interface="popover" [(ngModel)]="align">
+        <ion-select-option value="start">start</ion-select-option>
+        <ion-select-option value="center">center</ion-select-option>
+        <ion-select-option value="end">end</ion-select-option>
+      </ion-select>
+    </div>
+    <ion-grid class="demo-grid tall">
+      <ion-row
+        class="tall-row"
+        [ngClass]="['ion-justify-content-' + justify, 'ion-align-items-' + align]"
+      >
+        <ion-col size="3"><div class="box a">1</div></ion-col>
+        <ion-col size="3"><div class="box b">2</div></ion-col>
+      </ion-row>
+    </ion-grid>
+    <pre class="code"><code>&lt;ion-row class="ion-justify-content-{{ justify }} ion-align-items-{{ align }}"&gt;</code></pre>
+
+    <h3>Responsive: ancho actual {{ width }}px (breakpoint {{ breakpoint }})</h3>
+    <ion-grid class="demo-grid">
+      <ion-row>
+        @for (n of [1, 2, 3, 4, 5, 6]; track n) {
+          <ion-col size="12" size-sm="6" size-lg="4"><div class="box c">Tarjeta {{ n }}</div></ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+    <pre class="code"><code>&lt;ion-col size="12" size-sm="6" size-lg="4"&gt;</code></pre>
+  }
+
+  <!-- ───────────── 7. NAVEGACIÓN ───────────── -->
+  @case ('navegacion') {
+    <h3>Simulador de navegación</h3>
+    <p class="hint">URL actual: <code>{{ currentUrl }}</code></p>
+    <div class="controls">
+      <ion-select label="Método" interface="popover" [(ngModel)]="navDir">
+        <ion-select-option value="forward">navigateForward</ion-select-option>
+        <ion-select-option value="back">navigateBack</ion-select-option>
+        <ion-select-option value="root">navigateRoot</ion-select-option>
+      </ion-select>
+      <ion-select label="Destino" interface="popover" [(ngModel)]="navTarget">
+        @for (t of navTargets; track t.value) {
+          <ion-select-option [value]="t.value">{{ t.label }}</ion-select-option>
+        }
+      </ion-select>
+    </div>
+    <ion-button (click)="navigate()">Navegar</ion-button>
+    <pre class="code"><code>this.navCtrl.{{ navDir === 'forward' ? 'navigateForward' : navDir === 'back' ? 'navigateBack' : 'navigateRoot' }}(['/leccion', '{{ navTarget }}']);</code></pre>
+    <p class="hint">
+      Fíjate en la animación: <em>forward</em> desliza desde la derecha, <em>back</em> hacia la
+      derecha y <em>root</em> reemplaza sin historial.
+    </p>
+  }
+
+  <!-- ───────────── 8. TEMAS ───────────── -->
+  @case ('temas') {
+    <h3>Cambia el color primario</h3>
+    <div class="controls">
+      <label class="color-pick">
+        Color
+        <input type="color" [(ngModel)]="themeColor" />
+        <code>{{ themeColor }}</code>
+      </label>
+      <ion-range [min]="0" [max]="30" [(ngModel)]="radius" label="Radio" labelPlacement="start" [pin]="true"></ion-range>
+    </div>
+
+    <div class="theme-preview" [style]="theme">
+      <ion-button [style.--border-radius.px]="radius">Primario</ion-button>
+      <ion-button fill="outline" [style.--border-radius.px]="radius">Outline</ion-button>
+      <ion-chip color="primary">Chip</ion-chip>
+      <ion-toggle [checked]="true" color="primary">Toggle</ion-toggle>
+      <ion-progress-bar color="primary" [value]="0.6"></ion-progress-bar>
+      <ion-checkbox [checked]="true" color="primary">Checkbox</ion-checkbox>
+    </div>
+
+    <pre class="code"><code>{{ themeCss }}
+ion-button {{ '{' }} --border-radius: {{ radius }}px; {{ '}' }}</code></pre>
+
+    <h3>Modo oscuro de toda la app</h3>
+    <ion-button color="dark" (click)="school.toggleDark()">
+      <ion-icon slot="start" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon>{{ school.dark ? 'Cambiar a claro' : 'Cambiar a oscuro' }}
+    </ion-button>
+  }
+
+  <!-- ───────────── 9. NATIVO ───────────── -->
+  @case ('nativo') {
+    <h3>Información de plataforma</h3>
+    <ion-list lines="full">
+      <ion-item><ion-label>Capacitor.getPlatform()</ion-label><ion-note slot="end">{{ platformName }}</ion-note></ion-item>
+      <ion-item><ion-label>isNativePlatform()</ion-label><ion-note slot="end">{{ isNative }}</ion-note></ion-item>
+      <ion-item><ion-label>platform.is('mobile')</ion-label><ion-note slot="end">{{ platform.is('mobile') }}</ion-note></ion-item>
+      <ion-item><ion-label>platform.width()</ion-label><ion-note slot="end">{{ platform.width() }}px</ion-note></ion-item>
+    </ion-list>
+
+    <h3>Plugin Haptics</h3>
+    <div class="btn-row">
+      <ion-button size="small" (click)="haptic('light')">Impacto suave</ion-button>
+      <ion-button size="small" (click)="haptic('medium')">Impacto medio</ion-button>
+      <ion-button size="small" (click)="haptic('heavy')">Impacto fuerte</ion-button>
+      <ion-button size="small" color="success" (click)="haptic('success')"><ion-icon slot="start" name="checkmark"></ion-icon>Notificación</ion-button>
+      <ion-button size="small" color="tertiary" (click)="haptic('vibrate')">Vibrar</ion-button>
+    </div>
+    @if (nativeMsg) {
+      <ion-card color="light" class="out"><ion-card-content>{{ nativeMsg }}</ion-card-content></ion-card>
+    }
+  }
+
+  @case ('tabs-menu') {
+    @defer (on immediate) {
+      <app-demo-tabs></app-demo-tabs>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('datos') {
+    @defer (on immediate) {
+      <app-demo-api></app-demo-api>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('estado') {
+    @defer (on immediate) {
+      <app-demo-storage></app-demo-storage>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('animaciones') {
+    @defer (on immediate) {
+      <app-demo-anim></app-demo-anim>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('publicar') {
+    @defer (on immediate) {
+      <app-demo-publish></app-demo-publish>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('arquitectura') {
+    @defer (on immediate) {
+      <app-demo-arch></app-demo-arch>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('patrones-mvc') {
+    @defer (on immediate) {
+      <app-demo-mvc></app-demo-mvc>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('comparativa') {
+    @defer (on immediate) {
+      <app-demo-compare></app-demo-compare>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('principios-ui') {
+    @defer (on immediate) {
+      <app-demo-ui></app-demo-ui>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('ux-usabilidad') {
+    @defer (on immediate) {
+      <app-demo-ux></app-demo-ux>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('camara') {
+    @defer (on immediate) {
+      <app-demo-camera></app-demo-camera>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('gps') {
+    @defer (on immediate) {
+      <app-demo-gps></app-demo-gps>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('sensores') {
+    @defer (on immediate) {
+      <app-demo-sensors></app-demo-sensors>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('permisos') {
+    @defer (on immediate) {
+      <app-demo-permissions></app-demo-permissions>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('pruebas-perifericos') {
+    @defer (on immediate) {
+      <app-demo-testrunner></app-demo-testrunner>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('api-optimizacion') {
+    @defer (on immediate) {
+      <app-demo-apiopt></app-demo-apiopt>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('api-pruebas') {
+    @defer (on immediate) {
+      <app-demo-apitest></app-demo-apitest>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('emuladores') {
+    @defer (on immediate) {
+      <app-demo-emulator></app-demo-emulator>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('depuracion') {
+    @defer (on immediate) {
+      <app-demo-debug></app-demo-debug>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('pruebas-auto') {
+    @defer (on immediate) {
+      <app-demo-testrunner></app-demo-testrunner>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('autenticacion') {
+    @defer (on immediate) {
+      <app-demo-auth></app-demo-auth>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('datos-sensibles') {
+    @defer (on immediate) {
+      <app-demo-crypto></app-demo-crypto>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('seguridad-auditoria') {
+    @defer (on immediate) {
+      <app-demo-audit></app-demo-audit>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+  @case ('proyecto-final') {
+    @defer (on immediate) {
+      <app-demo-final></app-demo-final>
+    } @placeholder {
+      <p class="hint">Cargando demo…</p>
+    }
+  }
+}

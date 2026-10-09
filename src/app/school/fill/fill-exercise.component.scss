@@ -1,0 +1,51 @@
+.code {
+  margin: 0 0 10px;
+  padding: 14px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: #14172b;
+  color: #e6e9ff;
+  font-size: 0.85rem;
+  line-height: 1.8;
+}
+
+.slot {
+  min-width: 56px;
+  margin: 0 2px;
+  padding: 1px 8px;
+  border: 1px dashed #8a93ff;
+  border-radius: 6px;
+  background: rgba(138, 147, 255, 0.12);
+  color: #e6e9ff;
+  font: inherit;
+  cursor: pointer;
+
+  &.filled {
+    border-style: solid;
+    background: rgba(138, 147, 255, 0.3);
+  }
+
+  &.good {
+    border-color: #2dd36f;
+    background: rgba(45, 211, 111, 0.28);
+  }
+
+  &.bad {
+    border-color: #eb445a;
+    background: rgba(235, 68, 90, 0.3);
+  }
+}
+
+.bank ion-chip {
+  cursor: pointer;
+}
+
+.msg {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: var(--ion-color-danger);
+
+  &.ok {
+    color: var(--ion-color-success);
+  }
+}

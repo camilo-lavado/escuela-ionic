@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>Playground</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wrap">
+    <p class="hint">
+      Escribe HTML de Ionic y mira el resultado al instante. Es HTML puro: no funcionan las
+      directivas de Angular (<code>*ngFor</code>, <code>[(ngModel)]</code>…) ni los scripts, pero sí
+      todos los componentes, atributos, clases de utilidad y <code>&lt;style&gt;</code>.
+    </p>
+
+    <div class="presets">
+      @for (p of presets; track p.name) {
+        <ion-chip (click)="load(p)" color="primary" outline="true">{{ p.name }}</ion-chip>
+      }
+    </div>
+
+    <div class="split">
+      <section>
+        <h3>Código</h3>
+        <textarea
+          class="editor"
+          spellcheck="false"
+          [(ngModel)]="code"
+          (ngModelChange)="onChange()"
+        ></textarea>
+        <div class="actions">
+          <ion-button size="small" (click)="run()"><ion-icon slot="start" name="play"></ion-icon>Ejecutar</ion-button>
+          <ion-button size="small" fill="outline" (click)="copy()">Copiar</ion-button>
+          <ion-input
+            class="name"
+            placeholder="Nombre del snippet"
+            fill="outline"
+            [(ngModel)]="snippetName"
+          ></ion-input>
+          <ion-button size="small" color="success" (click)="save()">Guardar</ion-button>
+        </div>
+      </section>
+
+      <section>
+        <h3>Vista previa</h3>
+        <div class="preview"><div #host></div></div>
+      </section>
+    </div>
+
+    @if (school.snippets.length) {
+      <h3>Mis snippets</h3>
+      <ion-list>
+        @for (s of school.snippets; track s.name) {
+          <ion-item button detail="false" (click)="open(s.code)">
+            <ion-label>{{ s.name }}</ion-label>
+            <ion-button
+              slot="end"
+              fill="clear"
+              color="danger"
+              size="small"
+              (click)="school.deleteSnippet(s.name); $event.stopPropagation()"
+            >
+              Borrar
+            </ion-button>
+          </ion-item>
+        }
+      </ion-list>
+    }
+  </div>
+</ion-content>

@@ -1,0 +1,161 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text="Inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Lección {{ index + 1 }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (!lesson) {
+    <div class="ion-padding ion-text-center">
+      <h2>Lección no encontrada</h2>
+      <ion-button routerLink="/" routerDirection="root">Volver al inicio</ion-button>
+    </div>
+  } @else {
+    <main class="wrap" [attr.data-unit]="lesson.unit">
+      <header class="head raised" [attr.data-unit]="lesson.unit">
+        <div class="icon-tile filled big"><ion-icon [name]="unitIcon"></ion-icon></div>
+        <h1>{{ lesson.title }}</h1>
+        <p class="goal"><strong>Objetivo:</strong> {{ lesson.goal }}</p>
+        <ion-chip color="medium">{{ lesson.level }}</ion-chip>
+        <ion-chip color="medium">{{ lesson.minutes }} min</ion-chip>
+        <ion-chip color="tertiary">{{ lesson.unit === 4 ? 'Evaluación final' : 'Unidad ' + lesson.unit }}</ion-chip>
+        @for (id of lesson.indicators; track id) { <ion-chip outline="true" color="tertiary">Indicador {{ id }}</ion-chip> }
+        @if (school.isDone(lesson.id)) {
+          <ion-chip color="success"><ion-icon name="checkmark"></ion-icon> Completada</ion-chip>
+        }
+      </header>
+
+      <h2><span class="num">1</span> Teoría paso a paso</h2>
+      <ion-accordion-group [multiple]="true" [value]="['s0']">
+        @for (s of lesson.steps; track s.title; let i = $index) {
+          <ion-accordion [value]="'s' + i">
+            <ion-item slot="header">
+              <ion-label>{{ i + 1 }}. {{ s.title }}</ion-label>
+            </ion-item>
+            <div slot="content" class="step">
+              <p>{{ s.text }}</p>
+              @if (s.code) {
+                <div class="code-wrap">
+                  <button class="copy" type="button" (click)="copy(s.code)">Copiar</button>
+                  <pre><code>{{ s.code }}</code></pre>
+                </div>
+              }
+            </div>
+          </ion-accordion>
+        }
+      </ion-accordion-group>
+
+      @if (lesson.keyPoints.length) {
+        <ion-card class="keys">
+          <ion-card-header><ion-card-title><ion-icon name="pin"></ion-icon> Lo que debes recordar</ion-card-title></ion-card-header>
+          <ion-card-content>
+            <ul>
+              @for (k of lesson.keyPoints; track k) { <li>{{ k }}</li> }
+            </ul>
+          </ion-card-content>
+        </ion-card>
+      }
+      @if (lesson.pitfalls?.length) {
+        <ion-card class="pitfalls">
+          <ion-card-header><ion-card-title><ion-icon name="warning"></ion-icon> Errores frecuentes</ion-card-title></ion-card-header>
+          <ion-card-content>
+            <ul>
+              @for (k of lesson.pitfalls; track k) { <li>{{ k }}</li> }
+            </ul>
+          </ion-card-content>
+        </ion-card>
+      }
+
+      <h2><span class="num">2</span> Pruébalo tú mismo</h2>
+      <ion-card class="demo">
+        <ion-card-content>
+          <app-lesson-demo [lessonId]="lesson.id"></app-lesson-demo>
+        </ion-card-content>
+      </ion-card>
+
+      @if (fill) {
+        <h2><span class="num">3</span> Completa el código</h2>
+        <ion-card>
+          <ion-card-content>
+            <p class="fill-intro">Toca una palabra para rellenar el siguiente hueco; toca un hueco para vaciarlo.</p>
+            <app-fill-exercise
+              [fill]="fill"
+              [solved]="school.fillDone(lesson.id)"
+              (completed)="onFillDone()"
+            ></app-fill-exercise>
+          </ion-card-content>
+        </ion-card>
+      }
+
+      <h2><span class="num">{{ fill ? 4 : 3 }}</span> Reto</h2>
+      <ion-card color="tertiary">
+        <ion-card-content><ion-icon name="flag"></ion-icon> {{ lesson.challenge }}</ion-card-content>
+      </ion-card>
+
+      <h2><span class="num">{{ fill ? 5 : 4 }}</span> Quiz ({{ score }}/{{ lesson.quiz.length }})</h2>
+      @for (q of lesson.quiz; track q.q; let qi = $index) {
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title class="q">{{ qi + 1 }}. {{ q.q }}</ion-card-title>
+          </ion-card-header>
+          <ion-list lines="none">
+            @for (o of q.options; track o; let oi = $index) {
+              <ion-item
+                button
+                detail="false"
+                [color]="optionColor(qi, oi)"
+                (click)="pick(qi, oi)"
+              >
+                <ion-label class="ion-text-wrap">{{ o }}</ion-label>
+              </ion-item>
+            }
+          </ion-list>
+          @if (picks[qi] >= 0) {
+            <ion-card-content class="feedback">
+              @if (picks[qi] === q.answer) {
+                <ion-icon color="success" name="checkmark-circle"></ion-icon> ¡Correcto! {{ q.why }}
+              } @else {
+                <ion-icon color="danger" name="close-circle"></ion-icon> Casi. Vuelve a intentarlo.
+              }
+            </ion-card-content>
+          }
+        </ion-card>
+      }
+
+      <div class="finish">
+        <ion-button
+          expand="block"
+          size="large"
+          [color]="school.isDone(lesson.id) ? 'medium' : 'success'"
+          [disabled]="!allCorrect"
+          (click)="finish()"
+        >
+          {{ school.isDone(lesson.id) ? 'Lección completada' : allCorrect ? 'Completar lección (+100 XP)' : 'Responde bien el quiz para completar' }}
+        </ion-button>
+      </div>
+
+      <nav class="pager">
+        @if (prev) {
+          <ion-button fill="outline" [routerLink]="['/leccion', prev.id]" routerDirection="back">
+            ← {{ prev.title }}
+          </ion-button>
+        } @else {
+          <span></span>
+        }
+        @if (next) {
+          <ion-button [routerLink]="['/leccion', next.id]" routerDirection="forward">
+            {{ next.title }} →
+          </ion-button>
+        } @else {
+          <ion-button routerLink="/" routerDirection="root">Ir al inicio<ion-icon name="school"></ion-icon></ion-button>
+        }
+      </nav>
+    </main>
+  }
+</ion-content>

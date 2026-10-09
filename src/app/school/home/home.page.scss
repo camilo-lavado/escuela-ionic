@@ -1,0 +1,329 @@
+// ── Héroe: tarjeta elevada con texto de alto contraste ──
+.hero {
+  max-width: 760px;
+  margin: calc(var(--space) * 2) auto calc(var(--space) * 1.5);
+  padding: calc(var(--space) * 3);
+  border-radius: calc(var(--radius) * 2);
+  color: var(--ion-text-color);
+
+  .hero-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--n-bg);
+    box-shadow: var(--n-inset-sm);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ion-color-primary);
+  }
+
+  h1 {
+    margin: calc(var(--space) * 2) 0 var(--space);
+    font-size: clamp(2rem, 7vw, 2.6rem);
+    line-height: 1.1;
+    font-weight: 800;
+    color: var(--ion-text-color);
+  }
+
+  .lead {
+    margin: 0 0 calc(var(--space) * 3);
+    max-width: 52ch;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--n-muted);
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(var(--space) * 1.5);
+  margin-bottom: calc(var(--space) * 2.5);
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: calc(var(--space) * 1.5);
+    border-radius: var(--radius);
+    background: var(--n-bg);
+    border: 1px solid var(--n-edge);
+    box-shadow: var(--n-raised-sm);
+
+    ion-icon {
+      font-size: 1.3rem;
+      color: var(--ion-color-primary);
+    }
+
+    strong {
+      font-size: 1.02rem;
+      color: var(--ion-text-color);
+    }
+
+    span {
+      font-size: 0.72rem;
+      color: var(--n-muted);
+    }
+  }
+}
+
+.overall {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space) * 2.5);
+  margin-top: calc(var(--space) * 2.5);
+
+  .ring {
+    flex: none;
+    width: 104px;
+    height: 104px;
+    padding: 6px;
+    border-radius: 50%;
+    background: var(--n-bg);
+    box-shadow: var(--n-raised);
+    transform: rotate(-90deg);
+
+    circle {
+      fill: none;
+      stroke-width: 9;
+      stroke-linecap: round;
+    }
+
+    .track {
+      stroke: var(--ion-color-step-200);
+    }
+
+    .bar {
+      stroke: var(--ion-color-secondary);
+      transition: stroke-dasharray 600ms ease-out;
+    }
+
+    text {
+      transform: rotate(90deg);
+      transform-origin: 50% 50%;
+      fill: var(--ion-text-color);
+      font-size: 20px;
+      font-weight: 800;
+    }
+  }
+
+  .txt {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    strong {
+      font-size: 1.1rem;
+    }
+
+    span {
+      font-size: 0.82rem;
+      color: var(--n-muted);
+    }
+  }
+}
+
+.cta {
+  margin-top: calc(var(--space) * 3);
+  --box-shadow: -3px -3px 8px var(--n-light), 5px 5px 12px var(--n-dark);
+  font-weight: 700;
+}
+
+.next {
+  margin: calc(var(--space) * 1.25) 4px 0;
+  font-size: 0.82rem;
+  color: var(--n-muted);
+}
+
+// ── Filtros ──
+.filters {
+  max-width: 760px;
+  margin: calc(var(--space) * 3) auto 0;
+  padding: 0 calc(var(--space) * 2.5);
+
+  ion-searchbar {
+    --background: var(--n-bg);
+    --box-shadow: var(--n-inset-sm);
+    --border-radius: var(--radius);
+    --icon-color: var(--ion-color-primary);
+    --color: var(--ion-text-color);
+    --placeholder-color: var(--n-muted);
+    padding: 0 0 calc(var(--space) * 1.5);
+  }
+}
+
+// ── Unidades ──
+.units {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 calc(var(--space) * 2.5);
+}
+
+.unit {
+  margin: calc(var(--space) * 4) 0;
+}
+
+.unit-head {
+  display: flex;
+  gap: calc(var(--space) * 2);
+  align-items: center;
+  padding: calc(var(--space) * 2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  background: var(--n-bg);
+  border: 1px solid var(--n-edge);
+  box-shadow: var(--n-raised);
+  transition: box-shadow 200ms ease-out;
+
+  &:hover {
+    box-shadow: -8px -8px 18px var(--n-light), 8px 8px 18px var(--n-dark);
+  }
+
+  &:active {
+    box-shadow: var(--n-inset);
+  }
+
+  .icon-tile {
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+  }
+
+  .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+
+    ion-progress-bar {
+      --progress-background: var(--uc);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
+  }
+
+  .kicker {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--uc-text);
+    font-weight: 800;
+  }
+
+  .sub {
+    font-size: 0.75rem;
+    color: var(--n-muted);
+  }
+}
+
+.syllabus {
+  margin: calc(var(--space) * 1.5) 4px;
+  padding: var(--space) calc(var(--space) * 2);
+  border-left: 3px solid var(--uc);
+  font-size: 0.88rem;
+  line-height: 1.55;
+
+  h4 {
+    margin: calc(var(--space) * 1.5) 0 4px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--n-muted);
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .ind {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      display: flex;
+      gap: var(--space);
+      margin: 6px 0;
+    }
+
+    ion-icon {
+      flex: none;
+      margin-top: 3px;
+    }
+
+    em {
+      color: var(--n-muted);
+      font-size: 0.75rem;
+    }
+  }
+
+  .sub {
+    font-size: 0.78rem;
+    color: var(--n-muted);
+  }
+}
+
+// ── Tarjetas de lección ──
+.lesson-card {
+  margin: calc(var(--space) * 2) 0;
+}
+
+.lesson-row {
+  display: flex;
+  gap: calc(var(--space) * 2);
+  padding: calc(var(--space) * 2);
+
+  .icon-tile:not(.done) {
+    color: var(--uc-text);
+  }
+}
+
+.lesson-body {
+  min-width: 0;
+
+  h3 {
+    margin: 4px 0;
+    font-size: 1.02rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--n-muted);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  ion-chip {
+    margin: 0;
+    height: 24px;
+    font-size: 0.72rem;
+  }
+}
+
+.diploma {
+  max-width: 720px;
+  margin: calc(var(--space) * 2) auto;
+}
+
+.hint {
+  color: var(--n-muted);
+}

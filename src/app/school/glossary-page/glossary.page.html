@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>Glosario de componentes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="school.toggleDark()" aria-label="Cambiar entre modo claro y oscuro"><ion-icon slot="icon-only" [name]="school.dark ? 'sunny' : 'moon'"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wrap">
+    <ion-searchbar placeholder="Buscar componente…" [debounce]="150" [(ngModel)]="query"></ion-searchbar>
+    <ion-segment [(ngModel)]="category" [scrollable]="true">
+      @for (c of categories; track c) {
+        <ion-segment-button [value]="c"><ion-label>{{ c }}</ion-label></ion-segment-button>
+      }
+    </ion-segment>
+
+    <p class="hint">{{ filtered.length }} entradas · toca una para ver su código y probarlo.</p>
+
+    @for (e of filtered; track e.name) {
+      <ion-card class="entry">
+        <ion-item button detail="false" lines="none" (click)="toggle(e.name)">
+          <ion-label class="ion-text-wrap">
+            <h2>{{ e.name }}</h2>
+            <p>{{ e.desc }}</p>
+          </ion-label>
+          <ion-chip slot="end" color="medium">{{ e.category }}</ion-chip>
+        </ion-item>
+        @if (open === e.name) {
+          <ion-card-content>
+            <pre class="code"><code>{{ e.code }}</code></pre>
+            <ion-button size="small" (click)="tryIt(e)"><ion-icon slot="start" name="flask"></ion-icon>Probar en el Playground</ion-button>
+            @if (e.lesson) {
+              <ion-button size="small" fill="outline" (click)="goLesson(e.lesson)"><ion-icon slot="start" name="book"></ion-icon>Ver lección</ion-button>
+            }
+          </ion-card-content>
+        }
+      </ion-card>
+    } @empty {
+      <p class="ion-text-center hint">Sin resultados.</p>
+    }
+  </div>
+</ion-content>
