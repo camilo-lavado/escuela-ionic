@@ -98,3 +98,4 @@ Para añadir una lección: agrega el objeto en `lessons-u*.ts`, su unidad/indica
 - **Tema**: Neumorphism / Soft UI (designmd.app). Claro = papel cálido con barra ultramar y un color por unidad; oscuro = gris azulado. Sin negro puro, contraste AA, `prefers-reduced-motion` respetado.
 - **Cámara, GPS y sensores**: en el navegador usan las APIs web; en la app móvil se añade el camino nativo con los plugins de Capacitor.
 - **Saltos de línea**: parte del código del proyecto usa CRLF; respeta el estilo del archivo que edites (`git ls-files --eol`).
+# escuela-ionic
